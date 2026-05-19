@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AdwoU5WzQdM=",
+  "dgSpecHash": "v/O9Vbzq3fw=",
   "success": true,
-  "projectFilePath": "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
+  "projectFilePath": "D:\\computer science cairo\\forth semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dell\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

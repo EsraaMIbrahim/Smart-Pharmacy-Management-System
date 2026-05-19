@@ -47,13 +47,23 @@ namespace PharmacyManagementAPI.Controllers
                 return BadRequest($"Error saving order: {ex.Message}");
             }
         }
-        // --- 2. GET USER HISTORY ---
+        // --- 2. GET USER HISTORY (Updated for Payment Method) ---
         [HttpGet("MyHistory/{userId}")]
         public async Task<ActionResult<IEnumerable<OnlineOrder>>> GetClientHistory(int userId)
         {
+            // We explicitly select the fields to ensure PaymentMethod is sent to React
             var history = await _context.OnlineOrders
                 .Where(o => o.UserId == userId)
                 .OrderByDescending(o => o.OrderDate)
+                .Select(o => new {
+                    o.Id,
+                    o.OrderDate,
+                    o.MedicineName,   
+                    o.TotalPrice,
+                    o.ShippingAddress,
+                    o.PaymentMethod,  
+                    o.Status
+                })
                 .ToListAsync();
 
             return Ok(history);

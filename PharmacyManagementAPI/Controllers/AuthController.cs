@@ -19,10 +19,10 @@ namespace PharmacyManagementAPI.Controllers
         public IActionResult Login([FromBody] User loginData)
         {
             // 1. Search for a user with matching name and password
-            var user = _context.Users.FirstOrDefault(u =>
-                u.Username == loginData.Username &&
-                u.PasswordHash == loginData.PasswordHash &&
-                u.Role == loginData.Role); // Verify the selected role matches SQL
+            var user = _context.Users.ToList().FirstOrDefault(u =>
+                u.Username.Trim().Equals(loginData.Username.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                u.PasswordHash == loginData.PasswordHash && // Password remains exact
+                u.Role.Trim().Equals(loginData.Role.Trim(), StringComparison.OrdinalIgnoreCase));
 
             // 2. If not found, tell React "No entry!"
             if (user == null)
@@ -33,6 +33,7 @@ namespace PharmacyManagementAPI.Controllers
             // 3. If found, send back the user details 
             return Ok(new
             {
+                id = user.Id,
                 username = user.Username,
                 role = user.Role,
                 token = "success-token-" + Guid.NewGuid().ToString() //  for demo

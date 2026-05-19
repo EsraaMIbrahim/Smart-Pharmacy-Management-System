@@ -3,125 +3,143 @@ using Microsoft.EntityFrameworkCore;
 using PharmacyManagementAPI.Data;
 using PharmacyManagementAPI.Models;
 
-[Route("api/[controller]")]
-[ApiController]
-public class PatientsController : ControllerBase
+namespace PharmacyManagementAPI.Controllers
 {
-    private readonly ApiDbContext _context;
-    public PatientsController(ApiDbContext context) { _context = context; }
-
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Patient>>> GetPatients() => await _context.Patients.ToListAsync();
-
-    [HttpPost]
-    public async Task<ActionResult<Patient>> PostPatient(Patient patient)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PatientsController : ControllerBase
     {
-        _context.Patients.Add(patient);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetPatients), new { id = patient.Id }, patient);
-    }
+        private readonly ApiDbContext _context;
+        public PatientsController(ApiDbContext context) { _context = context; }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutPatient(int id, Patient patient)
-    {
-        if (id != patient.Id) return BadRequest();
+        // 1. GET: api/Patients (Fetch all patient records)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Patient>>> GetPatients() => await _context.Patients.ToListAsync();
 
-        _context.Entry(patient).State = EntityState.Modified;
-
-        try
+        // 2. POST: api/Patients (Register a new patient)
+        [HttpPost]
+        public async Task<ActionResult<Patient>> PostPatient(Patient patient)
         {
+            _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!_context.Patients.Any(e => e.Id == id)) return NotFound();
-            else throw;
+            return CreatedAtAction(nameof(GetPatients), new { id = patient.Id }, patient);
         }
 
-        return NoContent();
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletePatient(int id)
-    {
-        var patient = await _context.Patients.FindAsync(id);
-        if (patient == null)
+        // 3. PUT: api/Patients/{id} (Update personal and account status details)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutPatient(int id, [FromBody] Patient updatedPatient)
         {
-            return NotFound();
-        }
-        // Step 1: Tell SQL to ignore the relationship and delete any hidden history// But I think this will not work because of the foreign key constraint, so we have to delete the history first
-        var history = _context.PurchaseHistory.Where(h => h.PatientId == id);
-        _context.PurchaseHistory.RemoveRange(history);
-        _context.Patients.Remove(patient);
-        await _context.SaveChangesAsync();
+            if (id != updatedPatient.Id) return BadRequest("ID Mismatch");
 
-        return NoContent();
-    }
+            var existingPatient = await _context.Patients.FindAsync(id);
+            if (existingPatient == null) return NotFound("Patient not found");
 
-    [HttpGet("{id}/history")]
-    public async Task<ActionResult<IEnumerable<PurchaseHistory>>> GetHistory(int id)
-    {
-        return await _context.PurchaseHistory.Where(ph => ph.PatientId == id).ToListAsync();
-    }
+            // Explicitly sync values to database context
+            existingPatient.FullName = updatedPatient.FullName;
+            existingPatient.PhoneNumber = updatedPatient.PhoneNumber;
+            existingPatient.Email = updatedPatient.Email;
+            existingPatient.IsActive = updatedPatient.IsActive; // Handles account activation/deactivation switches
 
-    [HttpPost("RecordPurchase")]
-    public async Task<IActionResult> RecordPurchase([FromBody] PurchaseRequest request)
-    {
-        // 1. Search for the patient by Phone Number
-        var patient = await _context.Patients
-            .FirstOrDefaultAsync(p => p.PhoneNumber == request.PatientPhone);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Patients.Any(e => e.Id == id)) return NotFound();
+                else throw;
+            }
 
-        if (patient == null)
-        {
-            return BadRequest("Patient phone not found in database.");
+            return NoContent();
         }
 
-        // 2. Create the history record
-        var history = new PurchaseHistory
+        // 4. DELETE: api/Patients/{id} (Cascade data deletion safely)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePatient(int id)
         {
-            PatientId = patient.Id,
-            MedicineName = request.MedicineName,
-            Quantity = request.Quantity,
-            TotalPrice = request.TotalPrice,
-            PurchaseDate = DateTime.Now
-        };
+            var patient = await _context.Patients.FindAsync(id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
 
-        _context.PurchaseHistory.Add(history);
+            var history = _context.PurchaseHistories.Where(h => h.PatientId == id);
+            _context.PurchaseHistories.RemoveRange(history);
 
-        // 3. FORCE SQL TO UPDATE THE TOTALSPENT 
-        //calculate the new total directly inside the database
-        await _context.Database.ExecuteSqlRawAsync(
-            "UPDATE Patients SET TotalSpent = TotalSpent + {0} WHERE Id = {1}",
-            request.TotalPrice, patient.Id
-        );
+            _context.Patients.Remove(patient);
+            await _context.SaveChangesAsync();
 
-        // 4. Update Medicine Stock
-        var medicine = await _context.Medicines
-            .FirstOrDefaultAsync(m => m.Name == request.MedicineName);
+            return NoContent();
+        }
 
-        if (medicine != null)
+        // 5. GET: api/Patients/{id}/history (Fetch specific log of purchases)
+        [HttpGet("{id}/history")]
+        public async Task<ActionResult<IEnumerable<PurchaseHistories>>> GetHistory(int id)
         {
+            return await _context.PurchaseHistories.Where(ph => ph.PatientId == id).ToListAsync();
+        }
+
+        // 6. POST: api/Patients/RecordPurchase (Core business logic processing)
+        [HttpPost("RecordPurchase")]
+        public async Task<IActionResult> RecordPurchase([FromBody] PurchaseRequest request)
+        {
+            var patient = await _context.Patients
+                .FirstOrDefaultAsync(p => p.PhoneNumber == request.PatientPhone);
+
+            if (patient == null)
+            {
+                return BadRequest("Patient phone number was not found in the live registry.");
+            }
+
+            if (!patient.IsActive)
+            {
+                return BadRequest("🚫 Access Denied: This patient profile is currently disabled and cannot process checkouts.");
+            }
+
+            var medicine = await _context.Medicines
+                .FirstOrDefaultAsync(m => m.Id == request.MedicineId ||
+                                          m.Name.ToLower().Trim() == request.MedicineName.ToLower().Trim());
+
+            if (medicine == null)
+                return BadRequest($"Medicine '{request.MedicineName}' (Id: {request.MedicineId}) not found in database.");
+
+            var history = new PurchaseHistories
+            {
+                PatientId = patient.Id,
+                MedicineId = medicine.Id,       
+                MedicineName = medicine.Name,
+                Quantity = request.Quantity,
+                TotalPrice = request.TotalPrice,
+                PurchaseDate = DateTime.Now
+            };
+
+            _context.PurchaseHistories.Add(history);
+
+            await _context.Database.ExecuteSqlRawAsync(
+                "UPDATE Patients SET TotalSpent = TotalSpent + {0} WHERE Id = {1}",
+                request.TotalPrice, patient.Id
+            );
+
             medicine.StockQuantity -= request.Quantity;
+
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
-        // Save History and Stock changes
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        // 7. GET: api/Patients/AllSales (Global logs feed for Executive Analytics)
+        [HttpGet("AllSales")]
+        public async Task<ActionResult<IEnumerable<PurchaseHistories>>> GetAllSales()
+        {
+            return await _context.PurchaseHistories.OrderByDescending(h => h.PurchaseDate).ToListAsync();
+        }
     }
 
     public class PurchaseRequest
     {
         public string PatientPhone { get; set; } = string.Empty;
+        public int MedicineId { get; set; }          
         public string MedicineName { get; set; } = string.Empty;
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
-    }
-    // GET: api/Patients/AllSales
-    [HttpGet("AllSales")]
-    public async Task<ActionResult<IEnumerable<PurchaseHistory>>> GetAllSales()
-    {
-        // This pulls from the ACTUAL sales table where medicine is recorded
-        return await _context.PurchaseHistory.OrderByDescending(h => h.PurchaseDate).ToListAsync();
     }
 }

@@ -5,7 +5,7 @@
 namespace PharmacyManagementAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class FinalDashboardSync : Migration
+    public partial class RenameIngredientToPlural : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -18,13 +18,20 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApiDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:3000",   // React dev server (http)
+                "https://localhost:3000"   // React dev server (https)
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
+
 
 var app = builder.Build();
 
@@ -37,7 +44,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
+app.UseCors("AllowReactApp");
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

@@ -1,5 +1,65 @@
 [
   {
+    "ContainingType": "PharmacyManagementAPI.Controllers.AnalyticsController",
+    "Method": "GetClientOrders",
+    "RelativePath": "api/Analytics/ClientOrders",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PharmacyManagementAPI.Controllers.AnalyticsController",
+    "Method": "GetDashboardMetrics",
+    "RelativePath": "api/Analytics/DashboardMetrics",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PharmacyManagementAPI.Controllers.AnalyticsController",
+    "Method": "GetExpiryEngine",
+    "RelativePath": "api/Analytics/ExpiryEngine",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PharmacyManagementAPI.Controllers.AnalyticsController",
+    "Method": "GetSalesTrend",
+    "RelativePath": "api/Analytics/SalesTrend",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PharmacyManagementAPI.Controllers.AnalyticsController",
+    "Method": "GetShipments",
+    "RelativePath": "api/Analytics/Shipments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PharmacyManagementAPI.Controllers.AnalyticsController",
+    "Method": "GetTopProducts",
+    "RelativePath": "api/Analytics/TopProducts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "PharmacyManagementAPI.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
@@ -27,6 +87,27 @@
         "Name": "newUser",
         "Type": "PharmacyManagementAPI.Models.User",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PharmacyManagementAPI.Controllers.DrugInteractionsController",
+    "Method": "CheckSafety",
+    "RelativePath": "api/DrugInteractions/check-safety",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartIngredientIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "newIngredientId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -116,27 +197,6 @@
   },
   {
     "ContainingType": "PharmacyManagementAPI.Controllers.MedicinesController",
-    "Method": "CheckInteractionByMedicine",
-    "RelativePath": "api/Medicines/CheckInteractionByMedicine",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "med1",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "med2",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "PharmacyManagementAPI.Controllers.MedicinesController",
     "Method": "GetAlternatives",
     "RelativePath": "api/Medicines/FindAlternatives/{name}",
     "HttpMethod": "GET",
@@ -214,7 +274,7 @@
     ]
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "PharmacyManagementAPI.Controllers.PatientsController",
     "Method": "GetPatients",
     "RelativePath": "api/Patients",
     "HttpMethod": "GET",
@@ -234,7 +294,7 @@
     ]
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "PharmacyManagementAPI.Controllers.PatientsController",
     "Method": "PostPatient",
     "RelativePath": "api/Patients",
     "HttpMethod": "POST",
@@ -260,7 +320,7 @@
     ]
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "PharmacyManagementAPI.Controllers.PatientsController",
     "Method": "PutPatient",
     "RelativePath": "api/Patients/{id}",
     "HttpMethod": "PUT",
@@ -273,7 +333,7 @@
         "IsRequired": true
       },
       {
-        "Name": "patient",
+        "Name": "updatedPatient",
         "Type": "PharmacyManagementAPI.Models.Patient",
         "IsRequired": true
       }
@@ -281,7 +341,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "PharmacyManagementAPI.Controllers.PatientsController",
     "Method": "DeletePatient",
     "RelativePath": "api/Patients/{id}",
     "HttpMethod": "DELETE",
@@ -297,7 +357,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "PharmacyManagementAPI.Controllers.PatientsController",
     "Method": "GetHistory",
     "RelativePath": "api/Patients/{id}/history",
     "HttpMethod": "GET",
@@ -312,7 +372,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[PharmacyManagementAPI.Models.PurchaseHistory, PharmacyManagementAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[PharmacyManagementAPI.Models.PurchaseHistories, PharmacyManagementAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -323,7 +383,7 @@
     ]
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "PharmacyManagementAPI.Controllers.PatientsController",
     "Method": "GetAllSales",
     "RelativePath": "api/Patients/AllSales",
     "HttpMethod": "GET",
@@ -332,7 +392,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[PharmacyManagementAPI.Models.PurchaseHistory, PharmacyManagementAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[PharmacyManagementAPI.Models.PurchaseHistories, PharmacyManagementAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -343,7 +403,7 @@
     ]
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "PharmacyManagementAPI.Controllers.PatientsController",
     "Method": "RecordPurchase",
     "RelativePath": "api/Patients/RecordPurchase",
     "HttpMethod": "POST",
@@ -352,7 +412,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "PatientsController\u002BPurchaseRequest",
+        "Type": "PharmacyManagementAPI.Controllers.PurchaseRequest",
         "IsRequired": true
       }
     ],

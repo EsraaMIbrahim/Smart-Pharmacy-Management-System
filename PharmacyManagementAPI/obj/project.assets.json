@@ -3574,11 +3574,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
+      "projectUniqueName": "D:\\computer science cairo\\forth semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
       "projectName": "PharmacyManagementAPI",
-      "projectPath": "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
+      "projectPath": "D:\\computer science cairo\\forth semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
       "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-      "outputPath": "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\obj\\",
+      "outputPath": "D:\\computer science cairo\\forth semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
