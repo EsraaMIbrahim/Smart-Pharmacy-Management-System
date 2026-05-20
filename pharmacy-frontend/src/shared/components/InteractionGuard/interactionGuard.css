@@ -1,0 +1,49 @@
+.guard-container {
+  background-color: #e9ecef;
+  padding: 20px;
+  border-radius: 10px;
+  color: black;
+  margin-bottom: 2rem;
+}
+.guard-container h2 {
+  margin-bottom: 0.8rem;
+}
+.guard-inputs {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.guard-input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  flex: 1;
+}
+
+.guard-button {
+  padding: 8px 15px;
+  cursor: pointer;
+  max-width: 150px;
+}
+
+.guard-result {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.guard-result.danger {
+  color: red;
+}
+
+.guard-result.safe {
+  color: green;
+}
+.guard-button {
+  flex: 1;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

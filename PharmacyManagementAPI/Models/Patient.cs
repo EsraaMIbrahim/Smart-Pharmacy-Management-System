@@ -1,4 +1,5 @@
 ﻿namespace PharmacyManagementAPI.Models
+
 {
     public class Patient
     {
@@ -8,5 +9,7 @@
                                                                 // although I have not got any discounts from the kasion yet, me crying
         public string? Email { get; set; } // Optional field , although I think most patients will not provide their email, so I think it makes sense to make it optional, but we can use it for sending purchase receipts or promotional offers....but I will say in the future not for now
         public decimal TotalSpent { get; set; } = 0;//hey! this field is for tracking the total amount spent by the patient, which can be used for loyalty programs, discounts, and personalized offers but for now I Think using it to calculate the total benefits our pharmacy made for each patient, and then we can use it for financial reporting and analysis,
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        
     }
 }

@@ -1,0 +1,38 @@
+.guard-container {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  color: black;
+  margin-bottom: 20px;
+  width: 85%;
+}
+
+.guard-inputs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.guard-input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.guard-button {
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.guard-result {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.guard-result.danger {
+  color: red;
+}
+
+.guard-result.safe {
+  color: green;
+}

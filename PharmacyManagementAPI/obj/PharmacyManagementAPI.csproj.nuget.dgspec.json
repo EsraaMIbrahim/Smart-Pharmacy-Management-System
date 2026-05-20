@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj": {}
+    "D:\\CS Diploma\\Graduation Project\\Smart-Pharmacy-Management-System\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj": {}
   },
   "projects": {
-    "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj": {
+    "D:\\CS Diploma\\Graduation Project\\Smart-Pharmacy-Management-System\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
+        "projectUniqueName": "D:\\CS Diploma\\Graduation Project\\Smart-Pharmacy-Management-System\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
         "projectName": "PharmacyManagementAPI",
-        "projectPath": "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
-        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-        "outputPath": "D:\\computer science cairo\\third semester\\Project\\PharmacyManagementAPI\\PharmacyManagementAPI\\obj\\",
+        "projectPath": "D:\\CS Diploma\\Graduation Project\\Smart-Pharmacy-Management-System\\PharmacyManagementAPI\\PharmacyManagementAPI.csproj",
+        "packagesPath": "C:\\Users\\mokhl\\.nuget\\packages\\",
+        "outputPath": "D:\\CS Diploma\\Graduation Project\\Smart-Pharmacy-Management-System\\PharmacyManagementAPI\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\mokhl\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -94,7 +88,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200-preview.0.26103.119/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

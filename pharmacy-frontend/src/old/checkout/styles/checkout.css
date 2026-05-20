@@ -1,0 +1,38 @@
+.checkout-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  color: black;
+}
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 30px;
+}
+
+.checkout-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.checkout-total {
+  text-align: right;
+  margin-top: 20px;
+  font-size: 24px;
+}
+
+.checkout-card textarea,
+.checkout-card select {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+}

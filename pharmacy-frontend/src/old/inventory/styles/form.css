@@ -1,0 +1,41 @@
+.form-container {
+  background-color: #e2e2e2;
+  padding: 20px;
+  border-radius: 10px;
+  color: black;
+  margin-bottom: 20px;
+  width: 85%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.form-input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.form-input.highlight {
+  border: 2px solid #28a745;
+}
+
+.form-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.form-button.add {
+  background-color: green;
+}
+
+.form-button.edit {
+  background-color: orange;
+}

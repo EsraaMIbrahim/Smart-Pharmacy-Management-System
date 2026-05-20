@@ -1,0 +1,51 @@
+/* =========================================
+   DASHBOARD LAYOUT
+========================================= */
+
+.dashboard-layout {
+  display: flex;
+
+  min-height: 100vh;
+
+  background: #f3f6fb;
+}
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.dashboard-main {
+  flex: 1;
+
+  padding: 30px;
+
+  overflow-x: hidden;
+}
+
+/* =========================================
+   AUTH LAYOUT
+========================================= */
+
+.auth-layout {
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: linear-gradient(135deg, rgb(6, 95, 228), rgb(23, 162, 184));
+}
+
+.auth-overlay {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 20px;
+}

@@ -1,0 +1,37 @@
+.cart-container {
+  background-color: #fff3cd;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  border: 2px solid #ffc107;
+  color: #856404;
+  width: 85%;
+}
+
+.cart-table {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.cart-delete {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cart-summary {
+  text-align: right;
+}
+
+.cart-checkout {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}

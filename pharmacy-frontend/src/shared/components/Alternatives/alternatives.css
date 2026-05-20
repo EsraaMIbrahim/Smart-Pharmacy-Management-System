@@ -1,0 +1,123 @@
+.alt-container {
+  background-color: #e9ecef;
+  padding: 20px;
+  border-radius: 10px;
+  color: black;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+.alt-container h2 {
+  margin-bottom: 0.8rem;
+}
+
+.alt-search {
+  display: flex;
+  gap: 10px;
+}
+
+.alt-input {
+  flex: 2;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.alt-button {
+  flex: 1;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* =========================================
+   ALTERNATIVES LIST
+========================================= */
+
+.alt-list {
+  list-style: none;
+
+  padding: 0;
+
+  margin-top: 20px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+/* =========================================
+   ALTERNATIVE ITEM
+========================================= */
+
+.alt-list li {
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+
+  border-radius: 12px;
+
+  padding: 16px 18px;
+
+  color: #343a40;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* =========================================
+   HOVER EFFECT
+========================================= */
+
+.alt-list li:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+
+  background-color: #f1f9fb;
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.alt-empty {
+  margin-top: 20px;
+
+  text-align: center;
+
+  color: #6c757d;
+
+  font-style: italic;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .alt-list li {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 8px;
+  }
+}

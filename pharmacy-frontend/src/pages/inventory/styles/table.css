@@ -1,0 +1,197 @@
+/* =========================================
+   TABLE CONTAINER
+========================================= */
+
+.med-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background-color: white;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  margin-top: 20px;
+}
+
+/* =========================================
+   TABLE HEADER
+========================================= */
+
+.med-table thead {
+  background-color: #17a2b8;
+
+  color: white;
+}
+
+.med-table th {
+  padding: 16px;
+
+  text-align: center;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+}
+
+/* =========================================
+   TABLE BODY
+========================================= */
+
+.med-table td {
+  padding: 14px;
+
+  text-align: center;
+
+  border-bottom: 1px solid #e9ecef;
+
+  color: #333;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   ROW HOVER
+========================================= */
+
+.med-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.med-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* =========================================
+   LAST ROW BORDER FIX
+========================================= */
+
+.med-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.med-table button {
+  border: none;
+
+  border-radius: 6px;
+
+  padding: 8px 14px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+/* =========================================
+   EDIT BUTTON
+========================================= */
+
+.edit-btn {
+  background-color: #17a2b8;
+
+  color: #fafafa;
+}
+
+.edit-btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================================
+   DELETE BUTTON
+========================================= */
+
+.delete-btn {
+  background-color: #dc3545;
+
+  color: white;
+}
+
+.delete-btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================================
+   CART BUTTON
+========================================= */
+
+.cart-btn {
+  background-color: #28a745;
+
+  color: white;
+}
+
+.cart-btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================================
+   LOW STOCK
+========================================= */
+
+.low-stock {
+  color: #dc3545;
+
+  font-weight: bold;
+}
+
+/* =========================================
+   EXPIRED
+========================================= */
+
+.expired {
+  background-color: #ffe5e5 !important;
+}
+
+/* =========================================
+   DISCOUNT BADGE
+========================================= */
+
+.discount-badge {
+  display: inline-block;
+
+  margin-left: 8px;
+
+  padding: 4px 8px;
+
+  border-radius: 20px;
+
+  background-color: #dc3545;
+
+  color: white;
+
+  font-size: 11px;
+
+  font-weight: bold;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .med-table {
+    font-size: 12px;
+  }
+
+  .med-table th,
+  .med-table td {
+    padding: 10px;
+  }
+
+  .med-table button {
+    padding: 6px 10px;
+
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,60 @@
+.navbar {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.nav-menu {
+  background-color: #444;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.nav-button {
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.nav-button.client.active {
+  background-color: #28a745;
+}
+
+.nav-button.staff.active {
+  background-color: #007bff;
+}
+
+.user-info {
+  border-left: 1px solid white;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.user-label {
+  font-size: 14px;
+  color: white;
+}
+
+.user-role {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.logout-button {
+  margin-left: 15px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}

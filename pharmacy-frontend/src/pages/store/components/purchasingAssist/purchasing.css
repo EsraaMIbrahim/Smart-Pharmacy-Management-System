@@ -1,0 +1,14 @@
+.purchasing-assist {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+
+/* 🔥 Make it responsive */
+@media (max-width: 768px) {
+  .purchasing-assist {
+    flex-direction: column;
+    align-items: center;
+  }
+}

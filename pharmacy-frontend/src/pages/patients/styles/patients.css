@@ -1,0 +1,404 @@
+/* =========================================
+   PAGE LAYOUT
+========================================= */
+
+.patients-page {
+  width: 85%;
+
+  margin: 0 auto;
+
+  padding: 30px;
+
+  border-radius: 18px;
+
+  background: linear-gradient(145deg, #ffffff, #f8f9fa);
+
+  color: #212529;
+}
+
+.patients-page h2 {
+  margin-bottom: 25px;
+
+  font-size: 32px;
+
+  font-weight: 800;
+
+  color: #17a2b8;
+}
+
+/* =========================================
+   FORM CONTAINER
+========================================= */
+
+.patient-form {
+  background-color: #e9ecef;
+
+  padding: 24px;
+
+  border-radius: 14px;
+
+  margin-bottom: 30px;
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 14px;
+
+  align-items: center;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.patient-form.editing {
+  border-left: 6px solid #ffc107;
+
+  background-color: #fff8db;
+}
+
+/* =========================================
+   FORM TITLE
+========================================= */
+
+.patient-form h4 {
+  width: 100%;
+
+  margin-bottom: 10px;
+
+  font-size: 22px;
+
+  color: #343a40;
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.patient-form input {
+  flex: 1;
+
+  min-width: 220px;
+
+  padding: 14px;
+
+  border-radius: 10px;
+
+  border: 1px solid #ced4da;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.patient-form input:focus {
+  border-color: #17a2b8;
+
+  box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.15);
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.patient-form button {
+  padding: 12px 18px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-weight: 700;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Main Button */
+
+.patient-form button:first-of-type {
+  background-color: #17a2b8;
+
+  color: white;
+}
+
+.patient-form button:first-of-type:hover {
+  transform: translateY(-1px);
+
+  opacity: 0.95;
+
+  box-shadow: 0 6px 14px rgba(23, 162, 184, 0.25);
+}
+
+/* Edit Mode */
+
+.patient-form.editing button:first-of-type {
+  background-color: #ffc107;
+
+  color: #212529;
+}
+
+/* Cancel Button */
+
+.patient-form button:last-of-type {
+  background-color: #6c757d;
+
+  color: white;
+}
+
+.patient-form button:last-of-type:hover {
+  opacity: 0.9;
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.patients-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  background-color: white;
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  margin-top: 20px;
+}
+
+/* =========================================
+   TABLE HEADER
+========================================= */
+
+.patients-table thead {
+  background-color: #17a2b8;
+
+  color: white;
+}
+
+.patients-table th {
+  padding: 16px;
+
+  text-align: center;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.4px;
+}
+
+/* =========================================
+   TABLE BODY
+========================================= */
+
+.patients-table td {
+  padding: 14px;
+
+  text-align: center;
+
+  border-bottom: 1px solid #e9ecef;
+
+  color: #333;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   ROW HOVER
+========================================= */
+
+.patients-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.patients-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.patients-table button {
+  border: none;
+
+  border-radius: 6px;
+
+  padding: 8px 14px;
+
+  margin-right: 6px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.15s ease;
+}
+
+.patients-table button:hover {
+  transform: translateY(-1px);
+
+  opacity: 0.92;
+}
+
+/* View History */
+
+.patients-table button:nth-child(1) {
+  background-color: #28a745;
+
+  color: white;
+}
+
+/* Edit */
+
+.patients-table button:nth-child(2) {
+  background-color: #17a2b8;
+
+  color: white;
+}
+
+/* Delete */
+
+.patients-table button:nth-child(3) {
+  background-color: #dc3545;
+
+  color: white;
+}
+
+/* =========================================
+   PATIENT HISTORY
+========================================= */
+
+.patient-history {
+  margin-top: 30px;
+
+  padding: 24px;
+
+  border-radius: 16px;
+
+  background-color: white;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.history-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.history-header h3 {
+  color: #17a2b8;
+}
+
+.history-header button {
+  background-color: #dc3545;
+
+  color: white;
+
+  border: none;
+
+  padding: 10px 16px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+}
+
+.patient-history table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.patient-history th {
+  background-color: #17a2b8;
+
+  color: white;
+
+  padding: 14px;
+
+  text-align: center;
+}
+
+.patient-history td {
+  padding: 14px;
+
+  border-bottom: 1px solid #e9ecef;
+
+  text-align: center;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .patients-page {
+    width: 95%;
+
+    padding: 20px;
+  }
+
+  .patient-form {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .patient-form input {
+    width: 100%;
+  }
+
+  .patients-table {
+    font-size: 12px;
+  }
+
+  .patients-table th,
+  .patients-table td {
+    padding: 10px;
+  }
+
+  .patients-table button {
+    padding: 6px 10px;
+
+    font-size: 12px;
+  }
+}
+.form-error {
+  background: #fee2e2;
+
+  color: #b91c1c;
+
+  padding: 12px 16px;
+
+  border-radius: 10px;
+
+  margin-bottom: 16px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  width: 100%;
+}

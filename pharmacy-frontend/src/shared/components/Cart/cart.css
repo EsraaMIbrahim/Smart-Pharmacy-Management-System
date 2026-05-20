@@ -1,0 +1,285 @@
+/* .cart-container {
+  background-color: #e9ecef;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  border: 2px solid #ffc107;
+  color: #856404;
+  width: 85%;
+}
+.cart-container h2 {
+  margin-bottom: 2rem;
+}
+.cart-table {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.cart-delete {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 3px 7px;
+}
+
+.cart-summary {
+  text-align: right;
+}
+
+.cart-checkout {
+  background-color: #28a745;
+  color: white;
+  padding: 5px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+} */
+
+/* =========================================
+   CART CONTAINER
+========================================= */
+
+.cart-container {
+  margin: 0 auto 30px auto;
+
+  padding: 28px;
+
+  border-radius: 18px;
+
+  background: linear-gradient(145deg, #fafafa, #fafafa);
+
+  border: 1px solid #e9ecef;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+
+  color: #212529;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.cart-container h2 {
+  margin-bottom: 24px;
+
+  font-size: 28px;
+
+  font-weight: 700;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.cart-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  background-color: white;
+}
+
+/* =========================================
+   TABLE HEADER
+========================================= */
+
+.cart-table thead {
+  background-color: #17a2b8;
+
+  color: white;
+}
+
+.cart-table th {
+  padding: 16px;
+
+  text-align: center;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.3px;
+}
+
+/* =========================================
+   TABLE BODY
+========================================= */
+
+.cart-table td {
+  padding: 16px;
+
+  text-align: center;
+
+  border-bottom: 1px solid #f1f3f5;
+
+  color: #495057;
+
+  font-size: 14px;
+}
+
+.cart-table tbody tr {
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.cart-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* =========================================
+   DELETE BUTTON
+========================================= */
+
+.cart-delete {
+  background-color: #dc3545;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  padding: 8px 14px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cart-delete:hover {
+  opacity: 0.95;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+}
+
+/* =========================================
+   SUMMARY
+========================================= */
+
+.cart-summary {
+  margin-top: 24px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 20px;
+}
+
+.cart-summary h4 {
+  margin: 0;
+
+  font-size: 24px;
+
+  color: #212529;
+
+  font-weight: 700;
+}
+
+/* =========================================
+   CHECKOUT BUTTON
+========================================= */
+
+.cart-checkout {
+  background: linear-gradient(135deg, #17a2b8);
+
+  color: white;
+
+  padding: 14px 28px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.cart-checkout:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(40, 63, 167, 0.25);
+
+  opacity: 0.98;
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.cart-empty {
+  text-align: center;
+
+  padding: 40px;
+
+  color: #6c757d;
+
+  font-size: 18px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .cart-container {
+    width: 95%;
+
+    padding: 20px;
+  }
+
+  .cart-summary {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .cart-checkout {
+    width: 100%;
+  }
+
+  .cart-table th,
+  .cart-table td {
+    padding: 10px;
+
+    font-size: 12px;
+  }
+}

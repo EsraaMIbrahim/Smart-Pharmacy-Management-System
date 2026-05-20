@@ -1,0 +1,100 @@
+/* Overlay */
+.invoice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Container */
+.invoice-container {
+  background: white;
+  color: black;
+  padding: 40px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+}
+
+/* Title */
+.invoice-title {
+  border-bottom: 2px solid #28a745;
+  padding-bottom: 10px;
+}
+
+/* Table */
+.invoice-table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+}
+
+.invoice-table th {
+  background: #f8f9fa;
+  padding: 10px;
+  border-bottom: 2px solid #333;
+}
+
+.invoice-table td {
+  padding: 8px;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+/* Total */
+.invoice-total {
+  background: #f8f9fa;
+  padding: 10px;
+}
+
+/* Footer */
+.invoice-footer {
+  font-size: 12px;
+}
+
+/* Buttons */
+.invoice-actions {
+  margin-top: 20px;
+}
+
+.invoice-actions button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.invoice-actions button:first-child {
+  background: #28a745;
+  color: white;
+}
+
+.invoice-actions button:last-child {
+  background: #dc3545;
+  color: white;
+}
+
+/* PRINT MODE */
+@media print {
+  .no-print {
+    display: none;
+  }
+
+  .invoice-overlay {
+    background: none;
+    position: static;
+  }
+}

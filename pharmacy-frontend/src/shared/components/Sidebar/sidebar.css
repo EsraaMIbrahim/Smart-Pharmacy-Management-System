@@ -1,0 +1,121 @@
+.sidebar {
+  width: 260px;
+
+  min-height: 100vh;
+
+  background: white;
+
+  padding: 30px 20px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.05);
+}
+
+/* =========================================
+   LOGO
+========================================= */
+
+.sidebar-logo {
+  color: rgb(6, 95, 228);
+
+  font-size: 24px;
+
+  font-weight: 800;
+
+  margin-bottom: 8px;
+}
+
+.sidebar-role {
+  color: #64748b;
+
+  margin-bottom: 40px;
+
+  text-transform: capitalize;
+}
+
+/* =========================================
+   NAV
+========================================= */
+
+.sidebar-nav {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.sidebar-nav a {
+  text-decoration: none;
+
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  color: #334155;
+
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background: rgba(6, 95, 228, 0.08);
+
+  color: rgb(6, 95, 228);
+}
+
+.sidebar-nav a.active {
+  background: linear-gradient(135deg, rgb(6, 95, 228), rgb(23, 162, 184));
+
+  color: white;
+}
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.logout-btn {
+  border: none;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  background: #ef4444;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-weight: 700;
+
+  transition: 0.2s ease;
+}
+
+.logout-btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 90px;
+
+    padding: 20px 10px;
+  }
+
+  .sidebar-logo,
+  .sidebar-role,
+  .sidebar-nav a {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,147 @@
+/* Page Layout */
+.patients-page {
+  width: 85%;
+  margin: 0 auto;
+  background-color: #fff;
+  color: #000;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+/* ---------------- FORM ---------------- */
+
+.patient-form {
+  margin-bottom: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.patient-form.editing {
+  background-color: #fff3cd;
+}
+
+.patient-form h4 {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.patient-form input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  flex: 1;
+  min-width: 150px;
+}
+
+.patient-form button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Primary button */
+.patient-form button:first-of-type {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Editing mode button */
+.patient-form.editing button:first-of-type {
+  background-color: orange;
+}
+
+/* Cancel button */
+.patient-form button:last-of-type {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* ---------------- TABLE ---------------- */
+
+.patients-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.patients-table th {
+  background-color: #f2f2f2;
+  padding: 10px;
+  text-align: left;
+}
+
+.patients-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* ---------------- ACTION BUTTONS ---------------- */
+
+.patients-table button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Edit */
+.patients-table button:nth-child(2) {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Delete */
+.patients-table button:nth-child(3) {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* ---------------- HISTORY ---------------- */
+
+.patient-history {
+  margin-top: 30px;
+  padding: 20px;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-header button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.patient-history table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+.patient-history th {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px;
+}
+
+.patient-history td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}

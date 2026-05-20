@@ -1,0 +1,34 @@
+.alt-container {
+  background-color: #e9ecef;
+  padding: 20px;
+  border-radius: 10px;
+  color: black;
+  margin-bottom: 20px;
+  width: 85%;
+}
+
+.alt-search {
+  display: flex;
+  gap: 10px;
+}
+
+.alt-input {
+  flex: 2;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.alt-button {
+  flex: 1;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.alt-list {
+  text-align: left;
+  margin-top: 10px;
+}

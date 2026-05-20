@@ -1,0 +1,293 @@
+/* =========================================
+   ORDERS PAGE
+========================================= */
+
+.orders-page {
+  width: 100%;
+
+  min-height: 100vh;
+
+  padding: 32px;
+
+  background-color: #f5f7fb;
+
+  box-sizing: border-box;
+
+  color: #111827;
+}
+
+/* =========================================
+   PAGE TITLE
+========================================= */
+
+.orders-page h2 {
+  margin: 0;
+
+  font-size: 34px;
+
+  font-weight: 700;
+
+  color: rgb(6, 95, 228);
+
+  letter-spacing: -0.5px;
+}
+
+/* =========================================
+   PAGE SUBTITLE
+========================================= */
+
+.orders-page p {
+  margin-top: 10px;
+
+  margin-bottom: 28px;
+
+  color: #6b7280;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+}
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.orders-page hr {
+  border: none;
+
+  height: 1px;
+
+  background-color: #e5e7eb;
+
+  margin-bottom: 28px;
+}
+
+/* =========================================
+   CARD
+========================================= */
+
+.orders-card {
+  background-color: white;
+
+  border-radius: 18px;
+
+  border: 1px solid #e5e7eb;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.orders-table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+/* =========================================
+   TABLE HEADER
+========================================= */
+
+.orders-table thead {
+  background-color: #f9fafb;
+}
+
+.orders-table th {
+  text-align: left;
+
+  padding: 18px 20px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+
+  color: #6b7280;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* =========================================
+   TABLE ROWS
+========================================= */
+
+.order-row {
+  transition: background-color 0.2s ease;
+}
+
+.order-row:hover {
+  background-color: #f9fafb;
+}
+
+.order-row td {
+  padding: 18px 20px;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  font-size: 14px;
+
+  color: #111827;
+}
+
+/* =========================================
+   PRICE
+========================================= */
+
+.order-price {
+  font-weight: 700;
+
+  color: rgb(6, 95, 228);
+}
+
+/* =========================================
+   STATUS BADGES
+========================================= */
+
+.status-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+/* =========================================
+   DELIVERED
+========================================= */
+
+.status-badge.delivered {
+  background-color: rgba(34, 197, 94, 0.1);
+
+  color: rgb(22, 163, 74);
+}
+
+/* =========================================
+   PENDING
+========================================= */
+
+.status-badge.pending {
+  background-color: rgba(245, 158, 11, 0.12);
+
+  color: rgb(217, 119, 6);
+}
+
+/* =========================================
+   SHIPPED
+========================================= */
+
+.status-badge.shipped {
+  background-color: rgba(6, 95, 228, 0.1);
+
+  color: rgb(6, 95, 228);
+}
+
+/* =========================================
+   CANCELLED
+========================================= */
+
+.status-badge.cancelled {
+  background-color: rgba(239, 68, 68, 0.1);
+
+  color: rgb(220, 38, 38);
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state {
+  padding: 40px 20px;
+
+  text-align: center;
+
+  color: #9ca3af;
+
+  font-size: 15px;
+}
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.back-btn {
+  margin-top: 24px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  padding: 12px 20px;
+
+  background-color: rgb(6, 95, 228);
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
+  box-shadow: 0 4px 12px rgba(6, 95, 228, 0.15);
+}
+
+/* =========================================
+   BUTTON HOVER
+========================================= */
+
+.back-btn:hover {
+  background-color: rgb(5, 80, 190);
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 18px rgba(6, 95, 228, 0.2);
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .orders-page {
+    padding: 20px;
+  }
+
+  .orders-page h2 {
+    font-size: 28px;
+  }
+
+  .orders-table {
+    display: block;
+
+    overflow-x: auto;
+  }
+
+  .orders-table th,
+  .order-row td {
+    padding: 14px;
+  }
+
+  .back-btn {
+    width: 100%;
+  }
+}

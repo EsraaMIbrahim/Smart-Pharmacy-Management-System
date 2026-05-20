@@ -1,0 +1,306 @@
+HIGH LEVEL SYSTEM ARCHITECTURE
+
+
+┌────────────────────────────────────────────┐
+│                FRONTEND                    │
+│              React + Router                │
+└────────────────────────────────────────────┘
+                    │
+                    │ Axios HTTP Requests
+                    ▼
+┌────────────────────────────────────────────┐
+│                 BACKEND                    │
+│            ASP.NET Core Web API            │
+└────────────────────────────────────────────┘
+                    │
+                    │ Entity Framework Core
+                    ▼
+┌────────────────────────────────────────────┐
+│                DATABASE                    │
+│                 SQL Server                 │
+└────────────────────────────────────────────┘
+
+
+
+FRONTEND FOLDER STRUCTURE
+
+src/
+│
+├── app/
+│   ├── layouts/
+│   │   ├── DashboardLayout.jsx
+│   │   └── AuthLayout.jsx
+│   │
+│   ├── routes/
+│   │   ├── AppRouter.jsx
+│   │   ├── ProtectedRoute.jsx
+│   │   └── RoleRoute.jsx
+│
+├── context/
+│   └── AuthContext.jsx
+│
+├── services/
+│   ├── api.js
+│   ├── auth.js
+│   ├── medicines.js
+│   ├── patients.js
+│   ├── suppliers.js
+│   ├── dashboard.js
+│   └── orders.js
+│
+├── shared/
+│   ├── components/
+│   │   ├── Sidebar/
+│   │   ├── Cart/
+│   │   └── Common/
+│   │
+│   └── styles/
+│
+├── pages/
+│   │
+│   ├── auth/
+│   │   ├── LoginPage.jsx
+│   │   ├── RegisterPage.jsx
+│   │   └── auth.css
+│   │
+│   ├── dashboard/
+│   │   ├── Dashboard.jsx
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── styles/
+│   │
+│   ├── inventory/
+│   │   ├── InventoryPage.jsx
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── styles/
+│   │
+│   ├── patients/
+│   │   ├── PatientsPage.jsx
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── styles/
+│   │
+│   ├── suppliers/
+│   │   ├── SuppliersPage.jsx
+│   │   ├── ShipmentsPage.jsx
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── styles/
+│   │
+│   └── store/
+│       ├── StorePage.jsx
+│       ├── OrdersPage.jsx
+│       ├── components/
+│       ├── hooks/
+│       └── styles/
+│
+├── App.js
+├── index.js
+└── App.css
+
+
+PROTECTED ROUTE FLOW
+=====================
+
+User navigates to page
+        │
+        ▼
+ProtectedRoute.jsx
+        │
+        ▼
+Check AuthContext
+        │
+ ┌──────┴──────┐
+ │             │
+ ▼             ▼
+Logged In?     No
+ │             │
+ ▼             ▼
+Allow         Redirect
+Access        /login
+
+
+ROLE-BASED ACCESS FLOW
+========================
+
+User tries to access Dashboard
+        │
+        ▼
+RoleRoute.jsx
+        │
+        ▼
+Check user.role
+        │
+ ┌─────────────┬─────────────┐
+ │             │             │
+ ▼             ▼             ▼
+Admin      Pharmacist     Client
+ │             │             │
+ ▼             ▼             ▼
+Allow       Allow       Redirect
+
+
+
+FRONTEND FLOW ARCHITECTURE
+============================
+
+
+Page
+ │
+ ▼
+Component
+ │
+ ▼
+Custom Hook
+ │
+ ▼
+Service Layer
+ │
+ ▼
+Axios API Request
+ │
+ ▼
+Backend API
+
+
+
+example (Inventory Add Medicine)
+=========
+
+
+MedicineForm.jsx
+        │
+        ▼
+useMedicineForm.js
+        │
+        ▼
+useInventory.js
+        │
+        ▼
+services/medicines.js
+        │
+        ▼
+POST /api/Medicines
+        │
+        ▼
+ASP.NET Controller
+        │
+        ▼
+SQL Server
+
+
+======================
+ Login Flow Example
+======================
+
+
+LoginPage.jsx
+        │
+        ▼
+services/auth.js
+        │
+        ▼
+POST /api/Auth/login
+        │
+        ▼
+AuthController.cs
+        │
+        ▼
+Validate User in SQL
+        │
+        ▼
+Return Token + Role
+        │
+        ▼
+AuthContext.jsx
+        │
+        ▼
+Save user in localStorage
+        │
+        ▼
+Protected Routes Enabled
+
+
+
+
+
+==============================
+
+BACKEND ARCHITECTURE
+
+=============================
+
+
+Controllers/
+│
+├── AuthController.cs
+├── MedicinesController.cs
+├── PatientsController.cs
+├── SuppliersController.cs
+├── OnlineOrdersController.cs
+└── PurchaseOrdersController.cs
+
+
+
+==============================
+
+BACKEND Flow
+
+=============================
+
+
+Controller
+    │
+    ▼
+Entity Framework
+    │
+    ▼
+ApiDbContext
+    │
+    ▼
+SQL Server
+
+
+
+=====================
+DATABASE TABLES
+====================
+
+Users
+Medicines
+Patients
+Suppliers
+OnlineOrders
+PurchaseOrders
+DrugInteractions
+PurchaseHistory
+
+
+
+===========================
+
+DASHBOARD ANALYTICS FLOW
+=============================
+
+
+Dashboard.jsx
+      │
+      ▼
+useDashboardAnalytics.js
+      │
+      ▼
+dashboard.js service
+      │
+      ▼
+API Calls:
+   /Patients
+   /Suppliers
+   /Medicines
+   /OnlineOrders
+      │
+      ▼
+Analytics Calculations
+      │
+      ▼
+Charts + KPI Cards

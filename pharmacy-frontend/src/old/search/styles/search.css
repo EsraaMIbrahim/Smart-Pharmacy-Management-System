@@ -1,0 +1,19 @@
+.search-actions {
+  width: 85%;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search {
+  flex: 3;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.table-button {
+  flex: 1;
+  cursor: pointer;
+  border-radius: 5px;
+}
