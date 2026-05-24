@@ -1,68 +1,158 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media print {
-    .no-print {
-        display: none !important;
+    from {
+        transform: rotate(0deg);
     }
 
-    body {
-        background-color: white !important;
+    to {
+        transform: rotate(360deg);
     }
 }
+
 @media print {
-    .no-print {
-        display: none !important;
+
+    /* ── STEP 1: Hard-reset page geometry ── */
+    html, body {
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
-    body * {
-        visibility: hidden;
+    #root, .App {
+        height: auto !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+        display: block !important;
     }
 
-    #printable-invoice, #printable-invoice * {
-        visibility: visible;
+        /* ── STEP 2: HIDE every element using display:none ──
+        .App * {
+            display: none !important;
+        }
+
+    /* ── STEP 3a: INVOICE RECEIPT ──
+    #printable-invoice,
+    #printable-invoice * {
+        display: revert !important;
+        visibility: visible !important;
     }
 
+    /* Unhide the overlay ancestors so the invoice is reachable in the DOM */
+    div[style*="rgba(0,0,0,0.85)"],
+    div[style*="rgba(0, 0, 0, 0.85)"] {
+        display: block !important;
+        background: transparent !important;
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    /* Invoice itself: static positioning = no layout side-effects */
     #printable-invoice {
-        position: absolute;
-        left: 50%;
-        top: 20%;
-        transform: translate(-50%, 0);
-        width: 100%;
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 600px !important;
+        margin: 0 auto !important;
+        padding: 30px 40px !important;
+        background: white !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        box-sizing: border-box !important;
     }
+
+    /* ──  STOCK REPORT ──
+       Restore the report wrapper */
+    #printable-report,
+    #printable-report * {
+        display: revert !important;
+        visibility: visible !important;
+    }
+
+    #printable-report {
+        position: static !important;
+        width: 100% !important;
+        padding: 20px 30px !important;
+        margin: 0 !important;
+        background: white !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        box-sizing: border-box !important;
+        font-family: Arial, sans-serif !important;
+        color: #000 !important;
+    }
+
+        /* Print-only report header (hidden on screen via inline style) */
+        #printable-report .report-header {
+            display: block !important;
+            margin-bottom: 16px;
+        }
+
+        /* Clean table styles for stock report */
+        #printable-report table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            font-size: 11px !important;
+        }
+
+        #printable-report th {
+            background-color: #f0f0f0 !important;
+            color: #000 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            border: 1px solid #bbb !important;
+            padding: 7px 8px !important;
+            text-align: left !important;
+        }
+
+        #printable-report td {
+            border: 1px solid #ddd !important;
+            padding: 6px 8px !important;
+            font-size: 11px !important;
+        }
+
+        #printable-report tr:nth-child(even) td {
+            background-color: #f9f9f9 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Hide action buttons column — useless on paper */
+        #printable-report .no-print {
+            display: none !important;
+        }
 }

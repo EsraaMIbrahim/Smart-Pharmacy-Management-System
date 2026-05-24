@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization; // 1. Added for Security
+using Microsoft.AspNetCore.Authorization;
 using PharmacyManagementAPI.Data;
 using PharmacyManagementAPI.Models;
 
@@ -8,7 +8,6 @@ namespace PharmacyManagementAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize] // Optional: Uncomment this to require login for EVERY action in this controller
     public class MedicinesController : ControllerBase
     {
         private readonly ApiDbContext _context;
@@ -18,35 +17,34 @@ namespace PharmacyManagementAPI.Controllers
             _context = context;
         }
 
-        // 1. GET: api/Medicines (Fetch all)
+        // 1. GET: api/Medicines (Fetch all with unified relational data)
         [HttpGet]
-        // Everyone (even Staff) can view the inventory
         public async Task<ActionResult<IEnumerable<Medicine>>> GetMedicines()
         {
-            return await _context.Medicines.ToListAsync();
+            // loads the Ingredient table so React has seamless access to names via medicine.ingredient.name
+            return await _context.Medicines
+                .Include(m => m.Ingredient)
+                .ToListAsync();
         }
 
-        // 2. POST: api/Medicines (Add New)
+        // 2. POST: api/Medicines (Add New Stock Record)
         [HttpPost]
         [AllowAnonymous]
-        //[Authorize(Roles = "Admin,Pharmacist")] // 2. Only Admins or Pharmacists can add stock
         public async Task<ActionResult<Medicine>> PostMedicine(Medicine medicine)
         {
-            // 1. Handle Optional Barcode: Convert empty strings to null
-            // This allows SQL's Unique Filtered Index to ignore empty fields
             if (string.IsNullOrWhiteSpace(medicine.Barcode))
             {
                 medicine.Barcode = null;
             }
-            // 2. Check if Name already exists 
+
             var nameExists = await _context.Medicines
                 .AnyAsync(m => m.Name.ToLower().Trim() == medicine.Name.ToLower().Trim());
 
             if (nameExists)
             {
-                return Conflict(new { message = $"The medicine '{medicine.Name}' is already in the pharmacy." });
+                return Conflict(new { message = $"The medicine '{medicine.Name}' is already in the pharmacy stock." });
             }
-            // 3. Check if Barcode already exists (ONLY if a barcode was actually entered)
+
             if (medicine.Barcode != null)
             {
                 var barcodeExists = await _context.Medicines
@@ -64,100 +62,45 @@ namespace PharmacyManagementAPI.Controllers
             return CreatedAtAction(nameof(GetMedicines), new { id = medicine.Id }, medicine);
         }
 
-        // 3. GET: api/Medicines/CheckInteractionByMedicine
-        [HttpGet("CheckInteractionByMedicine")]
-        public async Task<IActionResult> CheckInteractionByMedicine(string med1, string med2)
-        {
-            // Find both medicines in the database based on the search names provided
-            var medicineA = await _context.Medicines.FirstOrDefaultAsync(m =>
-                m.Name.ToLower().Trim() == med1.ToLower().Trim());
-
-            var medicineB = await _context.Medicines.FirstOrDefaultAsync(m =>
-                m.Name.ToLower().Trim() == med2.ToLower().Trim());
-
-            // Validation check ensures the system only processes valid inventory items
-            if (medicineA == null || medicineB == null)
-            {
-                return BadRequest("One or both medicines not found in database.");
-            }
-
-            // --- AUTOMATED INTERACTION GUARD (Decision Support Logic) ---
-            // We use standard boolean logic because EF Core cannot translate null-conditional operators into SQL
-            // This compares brand names directly to match our updated SQL data
-            var interaction = await _context.DrugInteractions.FirstOrDefaultAsync(di =>
-                ((di.Ingredient1 == medicineA.Name && di.Ingredient2 == medicineB.Name) ||
-                 (di.Ingredient1 == medicineB.Name && di.Ingredient2 == medicineA.Name)));
-
-            if (interaction != null)
-            {
-                // Return 400 BadRequest to trigger the 'Clinical Danger' popup in the React frontend
-                return BadRequest($"🛑 DANGER: {interaction.WarningMessage} (Severity: {interaction.Severity})");
-            }
-
-            return Ok("✅ No known interactions found. Safe to dispense.");
-        }
-
-        // 4. GET: api/Medicines/FindAlternatives/{name}
+        // 3. GET: api/Medicines/FindAlternatives/{name}
         [HttpGet("FindAlternatives/{name}")]
         public async Task<ActionResult<IEnumerable<Medicine>>> GetAlternatives(string name)
         {
             var target = await _context.Medicines
                 .FirstOrDefaultAsync(m => m.Name.ToLower().Trim() == name.ToLower().Trim());
 
-            if (target == null) return NotFound("Medicine not found.");
+            if (target == null) return NotFound("Medicine not found in active catalog.");
 
+            // Uses the true IngredientId relational link to query identical clinical compounds
             return await _context.Medicines
-                .Where(m => m.ActiveIngredient == target.ActiveIngredient
-                       && m.Name.ToLower().Trim() != target.Name.ToLower().Trim()
-                       && m.StockQuantity > 0
-                       && m.IsActive != false) // ✅ Only suggest active medicines!
+                .Include(m => m.Ingredient)
+                .Where(m => m.IngredientId == target.IngredientId
+                    && m.Name.ToLower().Trim() != target.Name.ToLower().Trim()
+                    && m.StockQuantity > 0
+                    && m.IsActive != false)
                 .ToListAsync();
         }
 
-        // 5. PUT: api/Medicines/{id} (Update)
-        /*[HttpPut("{id}")]
-        [AllowAnonymous]//[Authorize(Roles = "Admin,Pharmacist")] // 3. Only Admin or Pharmacist can update stock/prices
-        public async Task<IActionResult> PutMedicine(int id, Medicine medicine)
-        {
-            /*if (id != medicine.Id) return BadRequest("ID Mismatch");
-
-            // 1. Tell Entity Framework we are modifying this medicine
-            _context.Entry(medicine).State = EntityState.Modified;
-
-            // 2. FORCE Entity Framework to see the IsActive change
-            _context.Entry(medicine).Property(x => x.IsActive).IsModified = true;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // 3. This will print the REAL error in our black console window
-                Console.WriteLine("REAL SQL ERROR: " + ex.InnerException?.Message ?? ex.Message);
-                return StatusCode(500, ex.Message);
-            }*/
+        // 4. PUT: api/Medicines/{id} (Update Medicine Inventory Details)
         [HttpPut("{id}")]
         [AllowAnonymous]
-        //[Authorize(Roles = "Admin,Pharmacist")]
-        public async Task<IActionResult> PutMedicine(int id, [FromBody] Medicine medicine) // Added [FromBody]
+        public async Task<IActionResult> PutMedicine(int id, [FromBody] Medicine medicine)
         {
-            // 1. Find the medicine in the database first
             var existingEntry = await _context.Medicines.FindAsync(id);
             if (existingEntry == null) return NotFound();
 
-            // 2. Mapping ALL fields so they actually save to SQL
+            // Explicitly sync properties to safely commit changes to SQL Server
             existingEntry.Name = medicine.Name;
-            existingEntry.ActiveIngredient = medicine.ActiveIngredient;
-            existingEntry.Price = medicine.Price;         //  Saves the new discounted price
-            existingEntry.BasePrice = medicine.BasePrice; //  Saves original price for the badge
+            existingEntry.IngredientId = medicine.IngredientId;
+            existingEntry.Price = medicine.Price;
+            existingEntry.BasePrice = medicine.BasePrice;
+            existingEntry.CostPrice = medicine.CostPrice;
             existingEntry.StockQuantity = medicine.StockQuantity;
             existingEntry.ExpiryDate = medicine.ExpiryDate;
             existingEntry.Category = medicine.Category;
             existingEntry.Barcode = medicine.Barcode;
             existingEntry.IsActive = medicine.IsActive;
 
-            // 3. Save changes using the standard way (since the model is now correct)
             _context.Entry(existingEntry).State = EntityState.Modified;
 
             try
@@ -167,31 +110,25 @@ namespace PharmacyManagementAPI.Controllers
             }
             catch (Exception ex)
             {
-                // Check the black console for errors if this fails
-                Console.WriteLine("SQL Save Error: " + ex.Message);
-                return StatusCode(500, "Database update failed.");
+                Console.WriteLine("SQL Engine Save Error: " + ex.Message);
+                return StatusCode(500, "Database context synchronization update failed.");
             }
         }
 
-
-        // 6. DELETE: api/Medicines/{id}
+        // 5. DELETE: api/Medicines/{id} (Soft-Delete Toggle Switch)
         [HttpDelete("{id}")]
         [AllowAnonymous]
-        //[Authorize(Roles = "Admin")] // only YOU (the Admin) can do it
         public async Task<IActionResult> DeleteMedicine(int id)
         {
             var medicine = await _context.Medicines.FindAsync(id);
             if (medicine == null) return NotFound();
 
-            // INSTEAD OF REMOVING: Just flip the switch
+            // Flip the switch to maintain historical operational tracking integrity 
             medicine.IsActive = false;
-
-            // Tell Entity Framework this is an update, not a delete
             _context.Entry(medicine).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
-
-            return NoContent(); // Success!
+            return NoContent();
         }
     }
 }

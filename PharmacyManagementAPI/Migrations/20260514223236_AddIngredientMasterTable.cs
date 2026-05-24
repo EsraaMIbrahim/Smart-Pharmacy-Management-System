@@ -5,7 +5,7 @@
 namespace PharmacyManagementAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUsersTable : Migration
+    public partial class AddIngredientMasterTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

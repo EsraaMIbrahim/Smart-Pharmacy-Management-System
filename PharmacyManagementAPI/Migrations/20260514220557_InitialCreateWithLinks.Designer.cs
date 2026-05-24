@@ -12,8 +12,8 @@ using PharmacyManagementAPI.Data;
 namespace PharmacyManagementAPI.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20260323120237_AddSuppliersAndPurchases")]
-    partial class AddSuppliersAndPurchases
+    [Migration("20260514220557_InitialCreateWithLinks")]
+    partial class InitialCreateWithLinks
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,52 @@ namespace PharmacyManagementAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("OnlineOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("MedicineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MedicineName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShippingAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicineId");
+
+                    b.ToTable("OnlineOrders");
+                });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.DrugInteraction", b =>
                 {
@@ -65,6 +111,9 @@ namespace PharmacyManagementAPI.Migrations
                     b.Property<string>("Barcode")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("BasePrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
@@ -97,11 +146,17 @@ namespace PharmacyManagementAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -123,6 +178,9 @@ namespace PharmacyManagementAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("MedicineId")
+                        .HasColumnType("int");
+
                     b.Property<string>("MedicineName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -141,7 +199,69 @@ namespace PharmacyManagementAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MedicineId");
+
                     b.ToTable("PurchaseHistory");
+                });
+
+            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("CostPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("MedicineId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("QuantityReceived")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("PharmacyManagementAPI.Models.Supplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.User", b =>
@@ -152,8 +272,14 @@ namespace PharmacyManagementAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -167,6 +293,26 @@ namespace PharmacyManagementAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("OnlineOrder", b =>
+                {
+                    b.HasOne("PharmacyManagementAPI.Models.Medicine", "Medicine")
+                        .WithMany()
+                        .HasForeignKey("MedicineId");
+
+                    b.Navigation("Medicine");
+                });
+
+            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistory", b =>
+                {
+                    b.HasOne("PharmacyManagementAPI.Models.Medicine", "Medicine")
+                        .WithMany()
+                        .HasForeignKey("MedicineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Medicine");
                 });
 #pragma warning restore 612, 618
         }

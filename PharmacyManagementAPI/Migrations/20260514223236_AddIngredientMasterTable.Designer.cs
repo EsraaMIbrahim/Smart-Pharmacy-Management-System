@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PharmacyManagementAPI.Data;
 
@@ -11,9 +12,11 @@ using PharmacyManagementAPI.Data;
 namespace PharmacyManagementAPI.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260514223236_AddIngredientMasterTable")]
+    partial class AddIngredientMasterTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,11 +79,11 @@ namespace PharmacyManagementAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Ingredient1Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Ingredient1")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Ingredient2Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Ingredient2")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Severity")
                         .HasColumnType("nvarchar(max)");
@@ -90,12 +93,10 @@ namespace PharmacyManagementAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Ingredient1Id");
-
                     b.ToTable("DrugInteractions");
                 });
 
-            modelBuilder.Entity("PharmacyManagementAPI.Models.Ingredients", b =>
+            modelBuilder.Entity("PharmacyManagementAPI.Models.Ingredient", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +110,7 @@ namespace PharmacyManagementAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredients", (string)null);
+                    b.ToTable("Ingredient");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.Medicine", b =>
@@ -119,6 +120,10 @@ namespace PharmacyManagementAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActiveIngredient")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Barcode")
                         .HasColumnType("nvarchar(max)");
@@ -170,21 +175,17 @@ namespace PharmacyManagementAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalSpent")
                         .HasColumnType("decimal(18,2)");
@@ -194,7 +195,7 @@ namespace PharmacyManagementAPI.Migrations
                     b.ToTable("Patients");
                 });
 
-            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistories", b =>
+            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,9 +226,7 @@ namespace PharmacyManagementAPI.Migrations
 
                     b.HasIndex("MedicineId");
 
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("PurchaseHistories");
+                    b.ToTable("PurchaseHistory");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseOrder", b =>
@@ -330,20 +329,9 @@ namespace PharmacyManagementAPI.Migrations
                     b.Navigation("Medicine");
                 });
 
-            modelBuilder.Entity("PharmacyManagementAPI.Models.DrugInteraction", b =>
-                {
-                    b.HasOne("PharmacyManagementAPI.Models.Ingredients", "Ingredient1")
-                        .WithMany()
-                        .HasForeignKey("Ingredient1Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Ingredient1");
-                });
-
             modelBuilder.Entity("PharmacyManagementAPI.Models.Medicine", b =>
                 {
-                    b.HasOne("PharmacyManagementAPI.Models.Ingredients", "Ingredient")
+                    b.HasOne("PharmacyManagementAPI.Models.Ingredient", "Ingredient")
                         .WithMany("Medicines")
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -352,7 +340,7 @@ namespace PharmacyManagementAPI.Migrations
                     b.Navigation("Ingredient");
                 });
 
-            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistories", b =>
+            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistory", b =>
                 {
                     b.HasOne("PharmacyManagementAPI.Models.Medicine", "Medicine")
                         .WithMany("PurchaseHistories")
@@ -360,18 +348,10 @@ namespace PharmacyManagementAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PharmacyManagementAPI.Models.Patient", "Patient")
-                        .WithMany("PurchaseHistories")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Medicine");
-
-                    b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("PharmacyManagementAPI.Models.Ingredients", b =>
+            modelBuilder.Entity("PharmacyManagementAPI.Models.Ingredient", b =>
                 {
                     b.Navigation("Medicines");
                 });
@@ -380,11 +360,6 @@ namespace PharmacyManagementAPI.Migrations
                 {
                     b.Navigation("OnlineOrders");
 
-                    b.Navigation("PurchaseHistories");
-                });
-
-            modelBuilder.Entity("PharmacyManagementAPI.Models.Patient", b =>
-                {
                     b.Navigation("PurchaseHistories");
                 });
 #pragma warning restore 612, 618
