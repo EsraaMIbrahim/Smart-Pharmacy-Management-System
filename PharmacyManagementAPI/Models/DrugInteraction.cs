@@ -13,12 +13,15 @@ namespace PharmacyManagementAPI.Models
         public int Ingredient1Id { get; set; }
 
         [ForeignKey("Ingredient1Id")]
-        public virtual Ingredients? Ingredient1 { get; set; }
+        public virtual Ingredient? Ingredient1 { get; set; }
 
         // We keep the ID for logic, but remove the physical constraint 
         // to stop the "Multiple Cascade Paths" error.
         [Required]
         public int Ingredient2Id { get; set; }
+
+        [ForeignKey("Ingredient2Id")]
+        public virtual Ingredient? Ingredient2 { get; set; }
 
         public string? Severity { get; set; }
         public string? WarningMessage { get; set; }

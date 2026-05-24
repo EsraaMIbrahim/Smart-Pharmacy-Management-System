@@ -16,7 +16,7 @@ namespace PharmacyManagementAPI.Models
         public int IngredientId { get; set; }
 
         [ForeignKey("IngredientId")]
-        public virtual Ingredients? Ingredient { get; set; }
+        public virtual Ingredient? Ingredient { get; set; }
 
         public decimal Price { get; set; }
 

@@ -12,8 +12,8 @@ using PharmacyManagementAPI.Data;
 namespace PharmacyManagementAPI.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20260515103606_DropActiveIngredientString")]
-    partial class DropActiveIngredientString
+    [Migration("20260524201941_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,6 +59,7 @@ namespace PharmacyManagementAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")
@@ -95,6 +96,8 @@ namespace PharmacyManagementAPI.Migrations
 
                     b.HasIndex("Ingredient1Id");
 
+                    b.HasIndex("Ingredient2Id");
+
                     b.ToTable("DrugInteractions");
                 });
 
@@ -127,12 +130,14 @@ namespace PharmacyManagementAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("BasePrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("CostPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("ExpiryDate")
@@ -149,6 +154,7 @@ namespace PharmacyManagementAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("StockQuantity")
@@ -173,19 +179,24 @@ namespace PharmacyManagementAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<decimal>("TotalSpent")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -193,7 +204,7 @@ namespace PharmacyManagementAPI.Migrations
                     b.ToTable("Patients");
                 });
 
-            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistory", b =>
+            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistories", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -218,13 +229,16 @@ namespace PharmacyManagementAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MedicineId");
 
-                    b.ToTable("PurchaseHistory");
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("PurchaseHistories");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseOrder", b =>
@@ -236,6 +250,7 @@ namespace PharmacyManagementAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("CostPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("MedicineId")
@@ -322,7 +337,8 @@ namespace PharmacyManagementAPI.Migrations
                 {
                     b.HasOne("PharmacyManagementAPI.Models.Medicine", "Medicine")
                         .WithMany("OnlineOrders")
-                        .HasForeignKey("MedicineId");
+                        .HasForeignKey("MedicineId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Medicine");
                 });
@@ -335,7 +351,15 @@ namespace PharmacyManagementAPI.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("PharmacyManagementAPI.Models.Ingredient", "Ingredient2")
+                        .WithMany()
+                        .HasForeignKey("Ingredient2Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Ingredient1");
+
+                    b.Navigation("Ingredient2");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.Medicine", b =>
@@ -349,7 +373,7 @@ namespace PharmacyManagementAPI.Migrations
                     b.Navigation("Ingredient");
                 });
 
-            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistory", b =>
+            modelBuilder.Entity("PharmacyManagementAPI.Models.PurchaseHistories", b =>
                 {
                     b.HasOne("PharmacyManagementAPI.Models.Medicine", "Medicine")
                         .WithMany("PurchaseHistories")
@@ -357,7 +381,15 @@ namespace PharmacyManagementAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PharmacyManagementAPI.Models.Patient", "Patient")
+                        .WithMany("PurchaseHistories")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Medicine");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.Ingredient", b =>
@@ -369,6 +401,11 @@ namespace PharmacyManagementAPI.Migrations
                 {
                     b.Navigation("OnlineOrders");
 
+                    b.Navigation("PurchaseHistories");
+                });
+
+            modelBuilder.Entity("PharmacyManagementAPI.Models.Patient", b =>
+                {
                     b.Navigation("PurchaseHistories");
                 });
 #pragma warning restore 612, 618

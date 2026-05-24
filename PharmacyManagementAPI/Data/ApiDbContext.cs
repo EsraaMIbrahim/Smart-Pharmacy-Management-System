@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PharmacyManagementAPI.Models;
+using System.Reflection.Emit;
 
 namespace PharmacyManagementAPI.Data
 {
@@ -15,19 +16,83 @@ namespace PharmacyManagementAPI.Data
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<OnlineOrder> OnlineOrders { get; set; }
-
-        public DbSet<Ingredients> Ingredients { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Ingredients>().ToTable("Ingredients");
-            
-            modelBuilder.Entity<DrugInteraction>()
-                .HasOne(di => di.Ingredient1)
-                .WithMany()
-                .HasForeignKey(di => di.Ingredient1Id)
-                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Medicine>(entity =>
+            {
+                entity.Property(e => e.Price).HasPrecision(18, 2);
+                entity.Property(e => e.BasePrice).HasPrecision(18, 2);
+                entity.Property(e => e.CostPrice).HasPrecision(18, 2);
+
+                entity.HasOne(e => e.Ingredient)
+                    .WithMany(i => i.Medicines)
+                    .HasForeignKey(e => e.IngredientId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Patient>(entity =>
+            {
+                entity.Property(e => e.FullName)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                entity.Property(e => e.PhoneNumber)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(256);
+
+                entity.Property(e => e.TotalSpent)
+                    .HasPrecision(18, 2);
+            });
+
+            modelBuilder.Entity<PurchaseHistories>(entity =>
+            {
+                entity.Property(e => e.TotalPrice).HasPrecision(18, 2);
+
+                entity.HasOne(e => e.Medicine)
+                    .WithMany(e => e.PurchaseHistories)
+                    .HasForeignKey(e => e.MedicineId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Patient)
+                    .WithMany(e => e.PurchaseHistories)
+                    .HasForeignKey(e => e.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<PurchaseOrder>(entity =>
+            {
+                entity.Property(e => e.CostPrice).HasPrecision(18, 2);
+            });
+
+            modelBuilder.Entity<OnlineOrder>(entity =>
+            {
+                entity.Property(e => e.TotalPrice).HasPrecision(18, 2);
+
+                entity.HasOne(e => e.Medicine)
+                    .WithMany(e => e.OnlineOrders)
+                    .HasForeignKey(e => e.MedicineId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<DrugInteraction>(entity =>
+            {
+                entity.HasOne(e => e.Ingredient1)
+                    .WithMany()
+                    .HasForeignKey(e => e.Ingredient1Id)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(e => e.Ingredient2)
+                    .WithMany()
+                    .HasForeignKey(e => e.Ingredient2Id)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
         }
     }
 }

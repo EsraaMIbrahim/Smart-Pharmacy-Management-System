@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization; 
 namespace PharmacyManagementAPI.Models
 {
-    public class Ingredients
+    public class Ingredient
     {
         [Key]
         public int Id { get; set; }
