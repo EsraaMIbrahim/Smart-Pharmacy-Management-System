@@ -34,7 +34,19 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
 
+    var pendingMigrations = db.Database.GetPendingMigrations();
+
+    if (pendingMigrations.Any())
+    {
+        db.Database.Migrate();
+    }
+
+    DbSeeder.Seed(db);
+}
 // 2. Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
