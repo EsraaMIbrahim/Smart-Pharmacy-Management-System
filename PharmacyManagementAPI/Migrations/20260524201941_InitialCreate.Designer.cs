@@ -115,7 +115,7 @@ namespace PharmacyManagementAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("Ingredient");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.Medicine", b =>
