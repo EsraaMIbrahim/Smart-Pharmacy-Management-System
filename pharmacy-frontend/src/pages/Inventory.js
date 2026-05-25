@@ -25,7 +25,8 @@ function Inventory({
     setIsOrderPlaced,
     currentInvoice,
     setCurrentInvoice,
-    setView
+    setView,
+    patients = []
 }) {
 
     // 1. DATA STATES
@@ -107,10 +108,10 @@ function Inventory({
                     const severity = data.severity ?? 'Interaction Detected';
                     const warningMsg = data.message ?? 'These medicines may interact dangerously.';
                     const proceed = window.confirm(
-                        `🚨 DRUG INTERACTION WARNING\n` +
+                        ` DRUG INTERACTION WARNING\n` +
                         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                         `"${medName}" + "${cartItem.name}"\n\n` +
-                        `⚠️  Severity: ${severity}\n\n` +
+                        ` Severity: ${severity}\n\n` +
                         `${warningMsg}\n\n` +
                         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                         `Press OK to add anyway, or Cancel to stop.`
@@ -177,6 +178,48 @@ function Inventory({
             const phone = prompt("Enter Patient Phone Number (Leave blank for Anonymous):");
             customerIdentifier = phone || "0000000000";
             displayIdentifier = phone || "Walk-in Customer";
+
+            // ── Profile Safety Check ──
+            // If a phone was entered, look up the patient and check their
+            // medication history against every medicine in the cart.
+            if (phone && phone.trim() !== "") {
+                const matchedPatient = patients.find(p =>
+                    (p.phoneNumber ?? p.PhoneNumber ?? '') === phone.trim()
+                );
+
+                if (matchedPatient) {
+                    try {
+                        const patientId  = matchedPatient.id ?? matchedPatient.Id;
+                        const cartMedIds = cart.map(item => parseInt(item.id ?? item.Id));
+
+                        const profileRes = await pharmacyApi.checkAgainstProfile(patientId, cartMedIds);
+                        const profileData = profileRes.data;
+
+                        if (!profileData.safe && profileData.interactions?.length > 0) {
+                            // Build a readable warning message
+                            const lines = profileData.interactions.map(itx =>
+                                `• [${(itx.severity ?? 'UNKNOWN').toUpperCase()}] ${itx.newIngredient} ↔ ${itx.conflictsWithProfileIngredient}\n` +
+                                `  ${itx.message}`
+                            ).join('\n\n');
+
+                            const proceed = window.confirm(
+                                ` PATIENT PROFILE CONFLICT\n` +
+                                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                                `Patient: ${matchedPatient.fullName ?? matchedPatient.FullName}\n\n` +
+                                `${lines}\n\n` +
+                                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                                `Press OK to dispense anyway, or Cancel to abort.`
+                            );
+
+                            if (!proceed) return; // pharmacist chose to abort
+                        }
+                    } catch (profileErr) {
+                        console.error("Profile safety check error:", profileErr);
+                        // Non-blocking — if the check fails, allow checkout to continue
+                    }
+                }
+            }
+            // ── End Profile Safety Check ──
         }
 
         try {
@@ -574,7 +617,7 @@ function Inventory({
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '1050px', margin: '40px auto' }}>
                         <AlternativeMatcher medicines={medicines} />
-                        <InteractionGuard />
+                        <InteractionGuard patients={patients} />
                     </div>
 
                     <div className="no-print" style={navigationDockStyle}>

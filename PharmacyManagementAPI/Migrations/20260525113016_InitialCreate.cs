@@ -17,7 +17,8 @@ namespace PharmacyManagementAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TherapeuticClass = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -205,14 +206,19 @@ namespace PharmacyManagementAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DrugInteractions_Ingredient1Id",
+                name: "IX_DrugInteractions_Ingredient1Id_Ingredient2Id",
                 table: "DrugInteractions",
-                column: "Ingredient1Id");
+                columns: new[] { "Ingredient1Id", "Ingredient2Id" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DrugInteractions_Ingredient2Id",
+                name: "IX_DrugInteractions_Ingredient2Id_Ingredient1Id",
                 table: "DrugInteractions",
-                column: "Ingredient2Id");
+                columns: new[] { "Ingredient2Id", "Ingredient1Id" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ingredients_TherapeuticClass",
+                table: "Ingredients",
+                column: "TherapeuticClass");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Medicines_IngredientId",

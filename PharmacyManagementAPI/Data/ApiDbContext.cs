@@ -21,6 +21,7 @@ namespace PharmacyManagementAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // ── Medicine ──
             modelBuilder.Entity<Medicine>(entity =>
             {
                 entity.Property(e => e.Price).HasPrecision(18, 2);
@@ -33,23 +34,16 @@ namespace PharmacyManagementAPI.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
+            // ── Patient ──
             modelBuilder.Entity<Patient>(entity =>
             {
-                entity.Property(e => e.FullName)
-                    .IsRequired()
-                    .HasMaxLength(150);
-
-                entity.Property(e => e.PhoneNumber)
-                    .IsRequired()
-                    .HasMaxLength(20);
-
-                entity.Property(e => e.Email)
-                    .HasMaxLength(256);
-
-                entity.Property(e => e.TotalSpent)
-                    .HasPrecision(18, 2);
+                entity.Property(e => e.FullName).IsRequired().HasMaxLength(150);
+                entity.Property(e => e.PhoneNumber).IsRequired().HasMaxLength(20);
+                entity.Property(e => e.Email).HasMaxLength(256);
+                entity.Property(e => e.TotalSpent).HasPrecision(18, 2);
             });
 
+            // ── PurchaseHistories ──
             modelBuilder.Entity<PurchaseHistories>(entity =>
             {
                 entity.Property(e => e.TotalPrice).HasPrecision(18, 2);
@@ -65,11 +59,13 @@ namespace PharmacyManagementAPI.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
+            // ── PurchaseOrder ──
             modelBuilder.Entity<PurchaseOrder>(entity =>
             {
                 entity.Property(e => e.CostPrice).HasPrecision(18, 2);
             });
 
+            // ── OnlineOrder ──
             modelBuilder.Entity<OnlineOrder>(entity =>
             {
                 entity.Property(e => e.TotalPrice).HasPrecision(18, 2);
@@ -80,6 +76,7 @@ namespace PharmacyManagementAPI.Data
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
+            // ── DrugInteraction ──
             modelBuilder.Entity<DrugInteraction>(entity =>
             {
                 entity.HasOne(e => e.Ingredient1)
@@ -91,6 +88,19 @@ namespace PharmacyManagementAPI.Data
                     .WithMany()
                     .HasForeignKey(e => e.Ingredient2Id)
                     .OnDelete(DeleteBehavior.NoAction);
+
+                // SQL Indexes: bidirectional lookup performance
+                // e.g. scan-cart queries all pairs in a single WHERE clause
+                entity.HasIndex(e => new { e.Ingredient1Id, e.Ingredient2Id });
+                entity.HasIndex(e => new { e.Ingredient2Id, e.Ingredient1Id });
+            });
+
+            // ── Ingredient ──
+            modelBuilder.Entity<Ingredient>(entity =>
+            {
+                // Index on IngredientId already exists as PK.
+                // Add index on TherapeuticClass for Level 3 class-match queries.
+                entity.HasIndex(e => e.TherapeuticClass);
             });
         }
     }

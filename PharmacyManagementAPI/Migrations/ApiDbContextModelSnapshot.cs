@@ -91,9 +91,9 @@ namespace PharmacyManagementAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Ingredient1Id");
+                    b.HasIndex("Ingredient1Id", "Ingredient2Id");
 
-                    b.HasIndex("Ingredient2Id");
+                    b.HasIndex("Ingredient2Id", "Ingredient1Id");
 
                     b.ToTable("DrugInteractions");
                 });
@@ -110,7 +110,13 @@ namespace PharmacyManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TherapeuticClass")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TherapeuticClass");
 
                     b.ToTable("Ingredients");
                 });

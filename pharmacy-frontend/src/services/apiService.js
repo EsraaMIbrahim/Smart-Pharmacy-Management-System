@@ -27,6 +27,15 @@ export const pharmacyApi = {
 
     findAlternatives: (name) => apiClient.get(`/Medicines/FindAlternatives/${name}`),
 
+    scanCart: (medicineIds) =>
+        apiClient.post('/DrugInteractions/scan-cart', { medicineIds }),
+
+    checkAgainstProfile: (patientId, newMedicineIds) =>
+        apiClient.post('/DrugInteractions/check-against-profile', { patientId, newMedicineIds }),
+
+    getSmartAlternatives: (name) =>
+        apiClient.get(`/Medicines/SmartAlternatives/${encodeURIComponent(name)}`),
+
     // --- Patient Operations ---
     getPatients: () => apiClient.get('/Patients'),
     addPatient: (data) => apiClient.post('/Patients', data),
@@ -39,7 +48,6 @@ export const pharmacyApi = {
     addSupplier: (data) => apiClient.post('/Suppliers', data),
     updateSupplier: (id, data) => apiClient.put(`/Suppliers/${id}`, data),
     deleteSupplier: (id) => apiClient.delete(`/Suppliers/${id}`),
-
     recordShipment: (data) => apiClient.post('/Suppliers/RecordShipment', data),
     getPurchaseHistory: () => apiClient.get('/Suppliers/PurchaseHistory'),
     getSalesHistory: () => apiClient.get('/Patients/AllSales'),
