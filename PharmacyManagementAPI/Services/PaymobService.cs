@@ -2,24 +2,29 @@
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 public class PaymobService
 {
     private readonly HttpClient _httpClient;
-    private const string BaseUrl = "https://accept.paymob.com/api";
+    private readonly IConfiguration _configuration;
 
-    // Paymob Data
-    private const string ApiKey = "ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRFd01qRXpPU3dpYm1GdFpTSTZJbWx1YVhScFlXd2lmUS5QSllJXzlWY0xwSXBTcnVPWS1LNS03Mkp0WC1PdHctb3NWbmtYQWxqcVFvNHlhUkJSMWUyLXJmQkRQOVRJR3lYZ1o1Nk5KMkFSc2lfa0FlSVBZU05WZw==";
-    private const int IntegrationId = 5384372; 
-    private const string IframeId = "975642"; 
 
-    public PaymobService(HttpClient httpClient)
+    public PaymobService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
+        _configuration = configuration;
     }
 
     public async Task<string> CreatePaymentLink(decimal amount, string firstName, string lastName, string email, string phone)
     {
+
+        // Load Paymob settings from configuration for the sake of security and flexibility
+        string ApiKey = _configuration["PaymobSettings:ApiKey"];
+        string BaseUrl = _configuration["PaymobSettings:BaseUrl"];
+        int IntegrationId = int.Parse(_configuration["PaymobSettings:IntegrationId"]);
+        string IframeId = _configuration["PaymobSettings:IframeId"];
+
         string amountCents = ((int)(amount * 100)).ToString();
 
         // 1. Authentication Step
