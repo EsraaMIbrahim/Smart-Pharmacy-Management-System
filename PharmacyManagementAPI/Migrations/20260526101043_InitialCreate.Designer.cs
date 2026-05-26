@@ -12,7 +12,7 @@ using PharmacyManagementAPI.Data;
 namespace PharmacyManagementAPI.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20260524201941_InitialCreate")]
+    [Migration("20260526101043_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -115,7 +115,7 @@ namespace PharmacyManagementAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredient");
+                    b.ToTable("Ingredients");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.Medicine", b =>
