@@ -12,14 +12,15 @@ public class OrderRequest
 {
     public string auth_token { get; set; }
     public string delivery_needed { get; set; } = "false";
-    public string amount_cents { get; set; } // السعر بالقروش (مثلا 100 جنيه تكتب 10000)
+    public string amount_cents { get; set; } // price in cents..
     public string currency { get; set; } = "EGP";
     public string[] items { get; set; } = new string[0];
+    public string redirection_url { get; set; }
 }
 
 public class OrderResponse
 {
-    public int id { get; set; } // رقم الطلب اللي Paymob كريتته
+    public int id { get; set; } // this is created by paymob , not our order id..
 }
 
 public class BillingData
@@ -43,7 +44,7 @@ public class PaymentKeyRequest
 {
     public string auth_token { get; set; }
     public string amount_cents { get; set; }
-    public int expiration { get; set; } = 3600; // صلاحية اللينك بالثواني
+    public int expiration { get; set; } = 3600; 
     public int order_id { get; set; }
     public BillingData billing_data { get; set; }
     public string currency { get; set; } = "EGP";
