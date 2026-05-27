@@ -16,11 +16,22 @@ public class OrderRequest
     public string currency { get; set; } = "EGP";
     public string[] items { get; set; } = new string[0];
     public string redirection_url { get; set; }
+    public string merchant_order_id { get; set; } = string.Empty;
 }
 
 public class OrderResponse
 {
     public int id { get; set; } // this is created by paymob , not our order id..
+    // optionally more fields can be added here if Paymob returns them
+    public string merchant_order_id { get; set; }
+}
+
+// Model used for Paymob callback payload (simplified)
+public class PaymentCallbackRequest
+{
+    public int order { get; set; }
+    public string success { get; set; }
+    public string data { get; set; }
 }
 
 public class BillingData
@@ -49,6 +60,7 @@ public class PaymentKeyRequest
     public BillingData billing_data { get; set; }
     public string currency { get; set; } = "EGP";
     public int integration_id { get; set; }
+    public string merchant_order_id { get; set; }
 }
 
 public class PaymentKeyResponse

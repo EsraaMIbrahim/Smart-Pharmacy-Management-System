@@ -167,12 +167,22 @@ function App() {
             };
 
             console.log("🚀 Sending to SQL:", JSON.stringify(orderPayload));
-            await pharmacyApi.createOnlineOrder(orderPayload);
-            alert("✅ Order Placed Successfully!");
+            const response = await pharmacyApi.createOnlineOrder(orderPayload);
+
+            console.log(response);
+
+            alert("✅ Order Placed Successfully! you will be redirected to payment page soon");
 
             setCart([]);
             fetchSalesHistory();
             setView('my_orders');
+
+            // Return created order id (attempt common id property names)
+            const createdId = response?.data?.id ?? null;
+            console.log(createdId);
+
+            localStorage.setItem("lastOnlineOrderItem", createdId);
+            return createdId;
         } catch (error) {
             console.error("❌ SQL Handshake Failed:", error.response?.data);
             const serverError = error.response?.data?.errors
@@ -180,6 +190,7 @@ function App() {
                 : error.response?.data || "Check Server Connection";
             alert("❌ Checkout failed: " + serverError);
         }
+        return null;
     };
 
     useEffect(() => {

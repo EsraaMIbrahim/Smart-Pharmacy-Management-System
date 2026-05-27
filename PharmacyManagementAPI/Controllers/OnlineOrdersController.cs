@@ -68,5 +68,39 @@ namespace PharmacyManagementAPI.Controllers
 
             return Ok(history);
         }
+
+        // --- 3. UPDATE ORDER STATUS ---
+        // Example: PUT api/OnlineOrders/123/status with body { "status": "Pending" }
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] StatusUpdateRequest request)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.Status))
+            {
+                return BadRequest("Status is required.");
+            }
+
+            var order = await _context.OnlineOrders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound($"Order with id {id} not found.");
+            }
+
+            order.Status = request.Status;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Database Error when updating status: {ex.Message}");
+                return StatusCode(500, $"Error updating order status: {ex.Message}");
+            }
+        }
+    }
+
+    public class StatusUpdateRequest
+    {
+        public string Status { get; set; } = string.Empty;
     }
 }

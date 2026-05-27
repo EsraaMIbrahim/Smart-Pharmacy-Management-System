@@ -206,14 +206,28 @@ function ClientStore({ medicines = [], cart = [], addToCart, removeFromCart, han
                             <PaymentMethod
                                 selectedMethod={deliveryInfo.method}
                                 onMethodChange={(method) => setDeliveryInfo({ ...deliveryInfo, method })}
+                                totalAmount={cart.reduce((sum, item) => sum + Number(item.totalPrice || 0), 0).toFixed(2)}
+                                onPrepareOnlineOrder={async () => {
+                                    const created = await handleCheckout(deliveryInfo);
+                                    if (created) {
+                                        setIsOrderPlaced(true);
+                                        setCheckoutStep('shop');
+                                    }
+                                    return created;
+                                }}
                             />
 
                             <button
-                                onClick={() => {
+                                onClick={async () => {
                                     if (!deliveryInfo.address.trim()) {
                                         return alert("⚠️ Please enter your delivery address!");
                                     }
-                                    handleCheckout(deliveryInfo);
+
+                                    if (deliveryInfo.method !== 'Cash') {
+                                        return alert(`For ${deliveryInfo.method} payments, please use the card payment button above to complete checkout.`);
+                                    }
+
+                                    await handleCheckout(deliveryInfo);
                                     setIsOrderPlaced(true);
                                     setCheckoutStep('shop');
                                 }}

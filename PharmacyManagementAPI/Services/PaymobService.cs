@@ -16,7 +16,7 @@ public class PaymobService
         _configuration = configuration;
     }
 
-    public async Task<string> CreatePaymentLink(decimal amount, string firstName, string lastName, string email, string phone)
+    public async Task<(string paymentUrl, int paymobOrderId)> CreatePaymentLink(decimal amount, string firstName, string lastName, string email, string phone, string merchant_order_id)
     {
 
         // Load Paymob settings from configuration for the sake of security and flexibility
@@ -47,7 +47,8 @@ public class PaymobService
         {
             auth_token = authToken,
             amount_cents = amountCents,
-            redirection_url = "https://localhost:7168/api/Payment/callback"
+            redirection_url = "https://www.google.com",
+            merchant_order_id = merchant_order_id
         };
         var orderContent = new StringContent(JsonSerializer.Serialize(orderReq), Encoding.UTF8, "application/json");
         var orderResMessage = await _httpClient.PostAsync($"{BaseUrl}/ecommerce/orders", orderContent);
@@ -67,6 +68,7 @@ public class PaymobService
         {
             auth_token = authToken,
             amount_cents = amountCents,
+            //merchant_order_id = merchant_order_id,
             order_id = orderId,
             integration_id = IntegrationId,
             billing_data = new BillingData
@@ -92,6 +94,7 @@ public class PaymobService
 
         string finalPaymentUrl = $"https://accept.paymob.com/api/acceptance/iframes/{IframeId}?payment_token={paymentToken}";
 
-        return finalPaymentUrl;
+        // return both url and the paymob order id so caller can map it to local order
+        return (finalPaymentUrl, orderId);
     }
 }
