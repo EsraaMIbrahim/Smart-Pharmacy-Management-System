@@ -50,10 +50,14 @@ function Navbar({ userRole, username, setView, currentView, onLogout }) {
                             <button onClick={() => setView('suppliers')} style={getBtnStyle('suppliers')}>
                                 🚚 Suppliers
                                 </button>
-                                {(userRole === 'Admin' || userRole === 'Pharmacist') && (
-                                    <button onClick={() => setView('analytics')} style={getBtnStyle('analytics')}>
-                                        📊 Analytics
-                                    </button>)}
+                            {(userRole === 'Admin' || userRole === 'Pharmacist' || userRole === 'Staff') && (
+                                <button onClick={() => setView('online_orders')} style={getBtnStyle('online_orders')}>
+                                    🚚 Orders
+                                </button>)}
+                            {(userRole === 'Admin' || userRole === 'Pharmacist') && (
+                                <button onClick={() => setView('analytics')} style={getBtnStyle('analytics')}>
+                                    📊 Analytics
+                                </button>)}
 
                         </>
                     )}

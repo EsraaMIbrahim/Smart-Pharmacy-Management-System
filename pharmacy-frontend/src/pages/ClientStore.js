@@ -200,7 +200,8 @@ function ClientStore({ medicines = [], cart = [], addToCart, removeFromCart, han
                                 placeholder="Street Name, Building, Apartment..."
                                 style={inputStyle('80px')}
                                 value={deliveryInfo.address}
-                                onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })}
+                                onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })
+                            }
                             />
 
                             <PaymentMethod

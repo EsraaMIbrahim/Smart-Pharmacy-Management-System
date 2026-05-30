@@ -97,6 +97,25 @@ namespace PharmacyManagementAPI.Controllers
                 return StatusCode(500, $"Error updating order status: {ex.Message}");
             }
         }
+
+        [HttpGet("AllOrders")]
+        public async Task<ActionResult<IEnumerable<OnlineOrder>>> GetAllOnlineOrders()
+        {
+            var allOrders = await _context.OnlineOrders
+                .OrderByDescending(o => o.OrderDate)
+                .Select(o => new {
+                    o.Id,
+                    o.OrderDate,
+                    o.MedicineName,
+                    o.TotalPrice,
+                    o.ShippingAddress,
+                    o.PaymentMethod,
+                    o.Status
+                })
+                .ToListAsync();
+
+            return Ok(allOrders);
+        }
     }
 
     public class StatusUpdateRequest

@@ -10,6 +10,7 @@ import Suppliers from './pages/Suppliers';
 import InvoiceModal from './pages/InvoiceModal';
 import OrderHistory from './pages/OrderHistory';
 import Analytics from './pages/Analytics';
+import OnlineOrders from './pages/OnlineOrders';
 
 /**
  * Smart Pharmacy Management System - Core Logic
@@ -307,6 +308,13 @@ function App() {
 
                 {view === 'analytics' && (
                     <Analytics setView={setView} medicines={medicines} />
+                )}
+
+                {/* 📋 All orders (not for clients) */}
+                {view === 'online_orders' && (
+                    <OnlineOrders 
+                        setView={setView} 
+                    />
                 )}
 
                 {view === 'my_orders' && (
