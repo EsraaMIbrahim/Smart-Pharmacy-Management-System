@@ -7,7 +7,7 @@ function PaymentMethod({ selectedMethod, onMethodChange, onPrepareOnlineOrder, t
     const methods = [
         { id: 'Cash', label: 'Cash on Delivery', icon: '💵', desc: 'Pay with cash at your doorstep' },
         { id: 'Visa', label: 'Credit / Debit Card', icon: '💳', desc: 'Secure instantaneous online clearance' },
-        { id: 'Wallet', label: 'Digital Mobile Wallet', icon: '📱', desc: 'Vodafone Cash / Orange Money / Instapay' }
+        //{ id: 'Wallet', label: 'Digital Mobile Wallet', icon: '📱', desc: 'Vodafone Cash / Orange Money / Instapay' }
     ];
 
     const handleConfirmPayment = async () => {
