@@ -48,7 +48,7 @@ function Login({
             });
 
             // 1. Capture Data from C# Response
-            const { id, role, username } = response.data;
+            const { id, role, username, fullname, phone } = response.data;
 
             // 2. Sync Global State (These come from props)
             setUserRole(role);
@@ -62,6 +62,8 @@ function Login({
             localStorage.setItem('savedUserId', id);
             localStorage.setItem('savedUserRole', role);
             localStorage.setItem('savedUsername', username);
+            localStorage.setItem('savedPhone', phone);
+            localStorage.setItem('savedFullName', fullname);
 
             // 4. Navigation/Routing
             setView(role === 'Client' ? 'client_store' : 'inventory');

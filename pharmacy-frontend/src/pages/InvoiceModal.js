@@ -4,6 +4,9 @@ import React from 'react';
 function InvoiceModal({ invoice, onClose }) {
     if (!invoice) return null;
 
+    console.log("Rendering Invoice Modal with data:", invoice);
+    console.log("hhhh");
+
     const handlePrint = () => {
         window.print();
     };

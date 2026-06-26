@@ -76,6 +76,11 @@ export const pharmacyApi = {
   getAnalyticsShipments: () => apiClient.get("/Analytics/Shipments"),
   getClientOrders: () => apiClient.get("/Analytics/ClientOrders"),
   getExpiryEngine: () => apiClient.get("/Analytics/ExpiryEngine"),
+  
+  // Get all orders for admin dashboard
+    getAllOrders: () => apiClient.get('/OnlineOrders/AllOrders'),
+    // Update order status (used by admin to mark orders as completed or canceled after review)
+    confirmOrderUpdate: (payload) => apiClient.post('/Payment/confirm', payload)
 };
 
 export default pharmacyApi;

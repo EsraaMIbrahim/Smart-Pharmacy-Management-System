@@ -16,7 +16,10 @@ function Navbar({ userRole, username, setView, currentView, onLogout }) {
                 {(userRole === 'Admin' || userRole === 'Pharmacist') && <>
                     <button onClick={() => setView('analytics')} style={button('analytics')}>Analytics</button>
                     <button onClick={() => setView('consultation_management')} style={button('consultation_management')}>Consultations</button>
+                                                                                     
                 </>}
+                 {(userRole === 'Admin' || userRole === 'Pharmacist' || userRole === 'Staff') && (
+                     <button onClick={() => setView('online_orders')} style={getBtnStyle('online_orders')}>Orders</button>)}                                                                       
             </>}</div>
         </div>
         <div style={userStyle}><div style={{ textAlign: 'right' }}><strong>{username || 'User'}</strong><small style={roleStyle}>{userRole} PORTAL</small></div><button onClick={() => window.confirm('Terminate session?') && onLogout()} style={logoutStyle}>Logout</button></div>
