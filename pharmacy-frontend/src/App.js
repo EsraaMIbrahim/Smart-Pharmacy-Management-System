@@ -11,6 +11,8 @@ import InvoiceModal from './pages/InvoiceModal';
 import OrderHistory from './pages/OrderHistory';
 import Analytics from './pages/Analytics';
 import OnlineOrders from './pages/OnlineOrders';
+import ClientAppointments from './pages/ClientAppointments';
+import AppointmentManagement from './pages/AppointmentManagement';
 
 /**
  * Smart Pharmacy Management System - Core Logic
@@ -323,6 +325,8 @@ function App() {
                         setView={setView}
                     />
                 )}
+                {view === 'consultations' && user.role === 'Client' && <ClientAppointments userId={user.id} />}
+                {view === 'consultation_management' && (user.role === 'Admin' || user.role === 'Pharmacist') && <AppointmentManagement userId={user.id} userRole={user.role} />}
             </main>
 
             {currentInvoice && (
