@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const BASE_URL = "http://localhost:5192/api";
-const BASE_URL = "https://localhost:7168/api";
+const BASE_URL = "http://localhost:5192/api";
+// const BASE_URL = "https://localhost:7168/api";
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -80,7 +80,15 @@ export const pharmacyApi = {
   // Get all orders for admin dashboard
     getAllOrders: () => apiClient.get('/OnlineOrders/AllOrders'),
     // Update order status (used by admin to mark orders as completed or canceled after review)
-    confirmOrderUpdate: (payload) => apiClient.post('/Payment/confirm', payload)
+    confirmOrderUpdate: (payload) => apiClient.post('/Payment/confirm', payload),
+
+  // --- AI Features ---
+  explainMedicine: (medicineName) => apiClient.post('/Ai/explain-medicine', { medicineName }),
+  getMostSearched: () => apiClient.get('/Ai/most-searched'),
+  saveExplanation: (userId, medicineName, explanation) =>
+    apiClient.post('/Ai/save-explanation', { userId, medicineName, explanation }),
+  getSavedExplanations: (userId) => apiClient.get(`/Ai/saved/${userId}`),
+  deleteSavedExplanation: (id) => apiClient.delete(`/Ai/saved/${id}`),
 };
 
 export default pharmacyApi;

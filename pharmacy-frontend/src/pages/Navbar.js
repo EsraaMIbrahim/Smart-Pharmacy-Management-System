@@ -9,6 +9,7 @@ function Navbar({ userRole, username, setView, currentView, onLogout }) {
                 <button onClick={() => setView('client_store')} style={button('client_store')}>Shop</button>
                 <button onClick={() => setView('my_orders')} style={button('my_orders')}>Orders</button>
                 <button onClick={() => setView('consultations')} style={button('consultations')}>Consultations</button>
+                <button onClick={() => setView('ai_explainer')} style={button('ai_explainer')}>✦ AI Explainer</button>
             </> : <>
                 <button onClick={() => setView('inventory')} style={button('inventory')}>Inventory</button>
                 <button onClick={() => setView('patients')} style={button('patients')}>Patients</button>
@@ -16,10 +17,11 @@ function Navbar({ userRole, username, setView, currentView, onLogout }) {
                 {(userRole === 'Admin' || userRole === 'Pharmacist') && <>
                     <button onClick={() => setView('analytics')} style={button('analytics')}>Analytics</button>
                     <button onClick={() => setView('consultation_management')} style={button('consultation_management')}>Consultations</button>
-                                                                                     
+
                 </>}
                  {(userRole === 'Admin' || userRole === 'Pharmacist' || userRole === 'Staff') && (
-                     <button onClick={() => setView('online_orders')} style={getBtnStyle('online_orders')}>Orders</button>)}                                                                       
+                     <button onClick={() => setView('online_orders')} style={button('online_orders')}>Orders</button>)}
+                <button onClick={() => setView('ai_explainer')} style={button('ai_explainer')}>✦ AI Explainer</button>
             </>}</div>
         </div>
         <div style={userStyle}><div style={{ textAlign: 'right' }}><strong>{username || 'User'}</strong><small style={roleStyle}>{userRole} PORTAL</small></div><button onClick={() => window.confirm('Terminate session?') && onLogout()} style={logoutStyle}>Logout</button></div>

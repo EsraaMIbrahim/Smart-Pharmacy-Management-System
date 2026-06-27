@@ -366,3 +366,4 @@ obj/
 
 #hide appsettings because of payment info..
 PharmacyManagementAPI/appsettings.json
+PharmacyManagementAPI/appsettings.Development.json

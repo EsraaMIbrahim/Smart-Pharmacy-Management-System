@@ -17,6 +17,8 @@ namespace PharmacyManagementAPI.Data
         public DbSet<OnlineOrder> OnlineOrders { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<ConsultationAppointment> ConsultationAppointments { get; set; }
+        public DbSet<AiMedicineSearch> AiMedicineSearches { get; set; }
+        public DbSet<AiSavedExplanation> AiSavedExplanations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
