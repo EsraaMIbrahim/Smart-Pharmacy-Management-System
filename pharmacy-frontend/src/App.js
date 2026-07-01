@@ -274,6 +274,7 @@ function App() {
                         setCurrentInvoice={setCurrentInvoice}
                         fetchPatients={fetchPatients}
                         fetchMyHistory={fetchSalesHistory}
+                        patients={patients}
                     />
                 )}
 
@@ -306,6 +307,7 @@ function App() {
                         salesCountMap={salesCountMap}
                         TRENDING_THRESHOLD={5}
                         setView={setView}
+                        patients={patients}
                     />
                 )}
 

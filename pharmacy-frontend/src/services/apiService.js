@@ -30,22 +30,30 @@ export const pharmacyApi = {
   findAlternatives: (name) =>
     apiClient.get(`/Medicines/FindAlternatives/${name}`),
 
-  // --- Patient Operations ---
-  getPatients: () => apiClient.get("/Patients"),
-  addPatient: (data) => apiClient.post("/Patients", data),
-  updatePatient: (id, data) => apiClient.put(`/Patients/${id}`, data),
-  deletePatient: (id) => apiClient.delete(`/Patients/${id}`),
-  getPatientHistory: (id) => apiClient.get(`/Patients/${id}/history`),
+    scanCart: (medicineIds) =>
+        apiClient.post('/DrugInteractions/scan-cart', { medicineIds }),
 
-  // --- Supplier Operations ---
-  getSuppliers: () => apiClient.get("/Suppliers"),
-  addSupplier: (data) => apiClient.post("/Suppliers", data),
-  updateSupplier: (id, data) => apiClient.put(`/Suppliers/${id}`, data),
-  deleteSupplier: (id) => apiClient.delete(`/Suppliers/${id}`),
+    checkAgainstProfile: (patientId, newMedicineIds) =>
+        apiClient.post('/DrugInteractions/check-against-profile', { patientId, newMedicineIds }),
 
-  recordShipment: (data) => apiClient.post("/Suppliers/RecordShipment", data),
-  getPurchaseHistory: () => apiClient.get("/Suppliers/PurchaseHistory"),
-  getSalesHistory: () => apiClient.get("/Patients/AllSales"),
+    getSmartAlternatives: (name) =>
+        apiClient.get(`/Medicines/SmartAlternatives/${encodeURIComponent(name)}`),
+
+    // --- Patient Operations ---
+    getPatients: () => apiClient.get('/Patients'),
+    addPatient: (data) => apiClient.post('/Patients', data),
+    updatePatient: (id, data) => apiClient.put(`/Patients/${id}`, data),
+    deletePatient: (id) => apiClient.delete(`/Patients/${id}`),
+    getPatientHistory: (id) => apiClient.get(`/Patients/${id}/history`),
+
+    // --- Supplier Operations ---
+    getSuppliers: () => apiClient.get('/Suppliers'),
+    addSupplier: (data) => apiClient.post('/Suppliers', data),
+    updateSupplier: (id, data) => apiClient.put(`/Suppliers/${id}`, data),
+    deleteSupplier: (id) => apiClient.delete(`/Suppliers/${id}`),
+    recordShipment: (data) => apiClient.post('/Suppliers/RecordShipment', data),
+    getPurchaseHistory: () => apiClient.get('/Suppliers/PurchaseHistory'),
+    getSalesHistory: () => apiClient.get('/Patients/AllSales'),
 
   // --- Order & Purchase Operations ---
   createOnlineOrder: (orderData) => apiClient.post("/OnlineOrders", orderData),

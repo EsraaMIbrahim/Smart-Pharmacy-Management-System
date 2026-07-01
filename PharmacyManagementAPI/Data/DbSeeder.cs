@@ -6,88 +6,184 @@ namespace PharmacyManagementAPI.Data
     {
         public static void Seed(ApiDbContext context)
         {
-            if (context.Medicines.Any())
-                return;
-
-            var ingredients = new List<Ingredient>
+            var ingredientSeed = new (string Name, string TherapeuticClass)[]
             {
-                new() { Name = "Paracetamol" },
-                new() { Name = "Ibuprofen" },
-                new() { Name = "Amoxicillin" },
-                new() { Name = "Cetirizine" },
-                new() { Name = "Aspirin" },
-                new() { Name = "Warfarin" },
-                new() { Name = "Azithromycin" },
-                new() { Name = "Atorvastatin" },
-                new() { Name = "Omeprazole" },
-                new() { Name = "Metformin" }
+                ("Paracetamol",  "Analgesic-Antipyretic"),
+                ("Ibuprofen",    "NSAID"),
+                ("Amoxicillin",  "Penicillin-Antibiotic"),
+                ("Cetirizine",   "Antihistamine"),
+                ("Aspirin",      "NSAID"),
+                ("Warfarin",     "Anticoagulant"),
+                ("Azithromycin", "Macrolide-Antibiotic"),
+                ("Atorvastatin", "Statin"),
+                ("Omeprazole",   "PPI"),
+                ("Metformin",    "Biguanide-Antidiabetic"),
+                ("Diclofenac",   "NSAID"),
+                ("Naproxen",     "NSAID"),
+                ("Loratadine",   "Antihistamine"),
+                ("Rosuvastatin", "Statin"),
             };
 
-            context.Ingredients.AddRange(ingredients);
-            context.SaveChanges();
+            var existingIngredients = context.Ingredients.ToList();
 
-            var medicines = new List<Medicine>
+            foreach (var (name, therapeuticClass) in ingredientSeed)
             {
-                new() { Name = "Panadol Extra", Price = 45, BasePrice = 35, CostPrice = 30, StockQuantity = 100, ExpiryDate = DateTime.Now.AddYears(2), Category = "Painkiller", Barcode = "100001", IsActive = true, IngredientId = ingredients[0].Id },
-                new() { Name = "Brufen 400mg", Price = 60, BasePrice = 50, CostPrice = 40, StockQuantity = 80, ExpiryDate = DateTime.Now.AddYears(2), Category = "Painkiller", Barcode = "100002", IsActive = true, IngredientId = ingredients[1].Id },
-                new() { Name = "Amoxil 500mg", Price = 95, BasePrice = 80, CostPrice = 70, StockQuantity = 60, ExpiryDate = DateTime.Now.AddYears(1), Category = "Antibiotic", Barcode = "100003", IsActive = true, IngredientId = ingredients[2].Id },
-                new() { Name = "Zyrtec 10mg", Price = 70, BasePrice = 55, CostPrice = 45, StockQuantity = 75, ExpiryDate = DateTime.Now.AddYears(2), Category = "Allergy", Barcode = "100004", IsActive = true, IngredientId = ingredients[3].Id },
-                new() { Name = "Aspirin Protect", Price = 50, BasePrice = 40, CostPrice = 32, StockQuantity = 110, ExpiryDate = DateTime.Now.AddYears(2), Category = "Blood Thinner", Barcode = "100005", IsActive = true, IngredientId = ingredients[4].Id },
-                new() { Name = "Marevan 5mg", Price = 120, BasePrice = 95, CostPrice = 82, StockQuantity = 35, ExpiryDate = DateTime.Now.AddYears(1), Category = "Blood Thinner", Barcode = "100006", IsActive = true, IngredientId = ingredients[5].Id },
-                new() { Name = "Zithromax 500mg", Price = 135, BasePrice = 110, CostPrice = 92, StockQuantity = 45, ExpiryDate = DateTime.Now.AddYears(2), Category = "Antibiotic", Barcode = "100007", IsActive = true, IngredientId = ingredients[6].Id },
-                new() { Name = "Lipitor 20mg", Price = 150, BasePrice = 125, CostPrice = 100, StockQuantity = 55, ExpiryDate = DateTime.Now.AddYears(2), Category = "Cholesterol", Barcode = "100008", IsActive = true, IngredientId = ingredients[7].Id },
-                new() { Name = "Losec 20mg", Price = 110, BasePrice = 90, CostPrice = 75, StockQuantity = 40, ExpiryDate = DateTime.Now.AddYears(2), Category = "Stomach", Barcode = "100009", IsActive = true, IngredientId = ingredients[8].Id },
-                new() { Name = "Glucophage 500mg", Price = 85, BasePrice = 70, CostPrice = 58, StockQuantity = 90, ExpiryDate = DateTime.Now.AddYears(2), Category = "Diabetes", Barcode = "100010", IsActive = true, IngredientId = ingredients[9].Id }
-            };
+                var existing = existingIngredients.FirstOrDefault(i => i.Name == name);
 
-            context.Medicines.AddRange(medicines);
-
-            context.DrugInteractions.AddRange(
-                new DrugInteraction { Ingredient1Id = ingredients[4].Id, Ingredient2Id = ingredients[5].Id, Severity = "High", WarningMessage = "Aspirin and Warfarin together may increase bleeding risk." },
-                new DrugInteraction { Ingredient1Id = ingredients[1].Id, Ingredient2Id = ingredients[5].Id, Severity = "High", WarningMessage = "Ibuprofen and Warfarin together may increase bleeding risk." },
-                new DrugInteraction { Ingredient1Id = ingredients[1].Id, Ingredient2Id = ingredients[4].Id, Severity = "Medium", WarningMessage = "Ibuprofen and Aspirin together may increase stomach bleeding or irritation." },
-                new DrugInteraction { Ingredient1Id = ingredients[6].Id, Ingredient2Id = ingredients[7].Id, Severity = "Medium", WarningMessage = "Azithromycin with Atorvastatin may increase muscle pain or weakness risk." },
-                new DrugInteraction { Ingredient1Id = ingredients[2].Id, Ingredient2Id = ingredients[5].Id, Severity = "Low", WarningMessage = "Amoxicillin with Warfarin may require monitoring for bleeding risk." }
-            );
-
-            context.Patients.AddRange(
-                new Patient { FullName = "Ahmed Mohamed", PhoneNumber = "01012345678", Email = "ahmed@gmail.com", TotalSpent = 250, IsActive = true, CreatedAt = DateTime.Now },
-                new Patient { FullName = "Sara Ali", PhoneNumber = "01098765432", Email = "sara@gmail.com", TotalSpent = 430, IsActive = true, CreatedAt = DateTime.Now },
-                new Patient { FullName = "Omar Hassan", PhoneNumber = "01155554444", Email = "omar@gmail.com", TotalSpent = 125, IsActive = true, CreatedAt = DateTime.Now },
-                new Patient { FullName = "Nour Tarek", PhoneNumber = "01222223333", Email = "nour@gmail.com", TotalSpent = 610, IsActive = true, CreatedAt = DateTime.Now }
-            );
-
-            context.Users.AddRange(
-                new User { Username = "admin", PasswordHash = "admin123", Role = "Admin", FullName = "System Admin", PhoneNumber = "01000000001" },
-                new User { Username = "pharmacist", PasswordHash = "pharmacist123", Role = "Pharmacist", FullName = "System Pharmacist", PhoneNumber = "01000000002" },
-                new User { Username = "staff", PasswordHash = "staff123", Role = "Staff", FullName = "System Staff", PhoneNumber = "01000000003" },
-                new User { Username = "client", PasswordHash = "client123", Role = "Client", FullName = "System Client", PhoneNumber = "01000000004" }
-            );
-
-            context.Suppliers.AddRange(
-                new Supplier { Name = "El Ezaby Pharma", ContactPerson = "Ahmed Samir", Phone = "01010101010", Email = "ezaby@gmail.com", Address = "Cairo", IsActive = true },
-                new Supplier { Name = "Seif Medical", ContactPerson = "Mona Adel", Phone = "01020202020", Email = "seif@gmail.com", Address = "Alexandria", IsActive = true },
-                new Supplier { Name = "Nile Pharma", ContactPerson = "Karim Hassan", Phone = "01030303030", Email = "nile@gmail.com", Address = "Giza", IsActive = true }
-            );
+                if (existing == null)
+                {
+                    var newIngredient = new Ingredient { Name = name, TherapeuticClass = therapeuticClass };
+                    context.Ingredients.Add(newIngredient);
+                    existingIngredients.Add(newIngredient);
+                }
+                else if (string.IsNullOrEmpty(existing.TherapeuticClass))
+                {
+                    existing.TherapeuticClass = therapeuticClass;
+                }
+            }
 
             context.SaveChanges();
 
-            context.PurchaseOrders.AddRange(
-                new PurchaseOrder { MedicineId = medicines[0].Id, SupplierId = 1, QuantityReceived = 50, CostPrice = 30, OrderDate = DateTime.Now },
-                new PurchaseOrder { MedicineId = medicines[1].Id, SupplierId = 1, QuantityReceived = 40, CostPrice = 40, OrderDate = DateTime.Now },
-                new PurchaseOrder { MedicineId = medicines[2].Id, SupplierId = 2, QuantityReceived = 30, CostPrice = 70, OrderDate = DateTime.Now }
-            );
+            var ingredientByName = context.Ingredients.ToDictionary(i => i.Name, i => i.Id);
 
-            context.PurchaseHistories.AddRange(
-                new PurchaseHistories { MedicineId = medicines[0].Id, PatientId = 1, MedicineName = "Panadol Extra", Quantity = 2, TotalPrice = 90, PurchaseDate = DateTime.Now },
-                new PurchaseHistories { MedicineId = medicines[1].Id, PatientId = 2, MedicineName = "Brufen 400mg", Quantity = 1, TotalPrice = 60, PurchaseDate = DateTime.Now },
-                new PurchaseHistories { MedicineId = medicines[2].Id, PatientId = 3, MedicineName = "Amoxil 500mg", Quantity = 1, TotalPrice = 95, PurchaseDate = DateTime.Now }
-            );
+            var medicineSeed = new[]
+            {
+                new { Name = "Panadol Extra",    Price = 45m,  BasePrice = 35m,  CostPrice = 30m,  StockQuantity = 100, ExpiryYears = 2, Category = "Painkiller",    Barcode = "100001", Ingredient = "Paracetamol" },
+                new { Name = "Brufen 400mg",     Price = 60m,  BasePrice = 50m,  CostPrice = 40m,  StockQuantity = 80,  ExpiryYears = 2, Category = "Painkiller",    Barcode = "100002", Ingredient = "Ibuprofen" },
+                new { Name = "Amoxil 500mg",     Price = 95m,  BasePrice = 80m,  CostPrice = 70m,  StockQuantity = 60,  ExpiryYears = 1, Category = "Antibiotic",    Barcode = "100003", Ingredient = "Amoxicillin" },
+                new { Name = "Zyrtec 10mg",      Price = 70m,  BasePrice = 55m,  CostPrice = 45m,  StockQuantity = 75,  ExpiryYears = 2, Category = "Allergy",       Barcode = "100004", Ingredient = "Cetirizine" },
+                new { Name = "Aspirin Protect",  Price = 50m,  BasePrice = 40m,  CostPrice = 32m,  StockQuantity = 110, ExpiryYears = 2, Category = "Blood Thinner", Barcode = "100005", Ingredient = "Aspirin" },
+                new { Name = "Marevan 5mg",      Price = 120m, BasePrice = 95m,  CostPrice = 82m,  StockQuantity = 35,  ExpiryYears = 1, Category = "Blood Thinner", Barcode = "100006", Ingredient = "Warfarin" },
+                new { Name = "Zithromax 500mg",  Price = 135m, BasePrice = 110m, CostPrice = 92m,  StockQuantity = 45,  ExpiryYears = 2, Category = "Antibiotic",    Barcode = "100007", Ingredient = "Azithromycin" },
+                new { Name = "Lipitor 20mg",     Price = 150m, BasePrice = 125m, CostPrice = 100m, StockQuantity = 55,  ExpiryYears = 2, Category = "Cholesterol",   Barcode = "100008", Ingredient = "Atorvastatin" },
+                new { Name = "Losec 20mg",       Price = 110m, BasePrice = 90m,  CostPrice = 75m,  StockQuantity = 40,  ExpiryYears = 2, Category = "Stomach",       Barcode = "100009", Ingredient = "Omeprazole" },
+                new { Name = "Glucophage 500mg", Price = 85m,  BasePrice = 70m,  CostPrice = 58m,  StockQuantity = 90,  ExpiryYears = 2, Category = "Diabetes",      Barcode = "100010", Ingredient = "Metformin" },
+                new { Name = "Voltaren 50mg",    Price = 65m,  BasePrice = 52m,  CostPrice = 42m,  StockQuantity = 70,  ExpiryYears = 2, Category = "Painkiller",    Barcode = "100011", Ingredient = "Diclofenac" },
+                new { Name = "Naprosyn 500mg",   Price = 72m,  BasePrice = 58m,  CostPrice = 47m,  StockQuantity = 65,  ExpiryYears = 2, Category = "Painkiller",    Barcode = "100012", Ingredient = "Naproxen" },
+                new { Name = "Claritine 10mg",   Price = 75m,  BasePrice = 60m,  CostPrice = 48m,  StockQuantity = 80,  ExpiryYears = 2, Category = "Allergy",       Barcode = "100013", Ingredient = "Loratadine" },
+                new { Name = "Crestor 10mg",     Price = 165m, BasePrice = 138m, CostPrice = 112m, StockQuantity = 45,  ExpiryYears = 2, Category = "Cholesterol",   Barcode = "100014", Ingredient = "Rosuvastatin" },
+            };
 
-            context.OnlineOrders.AddRange(
-                new OnlineOrder { UserId = 4, MedicineId = medicines[0].Id, MedicineName = "Panadol Extra", Quantity = 2, TotalPrice = 90, OrderDate = DateTime.Now, ShippingAddress = "Nasr City, Cairo", PaymentMethod = "Cash", Status = "Pending" },
-                new OnlineOrder { UserId = 4, MedicineId = medicines[2].Id, MedicineName = "Amoxil 500mg", Quantity = 1, TotalPrice = 95, OrderDate = DateTime.Now, ShippingAddress = "Dokki, Giza", PaymentMethod = "Visa", Status = "Delivered" }
-            );
+            var existingMedicineNames = context.Medicines.Select(m => m.Name).ToHashSet();
+
+            foreach (var m in medicineSeed)
+            {
+                if (existingMedicineNames.Contains(m.Name))
+                    continue;
+
+                context.Medicines.Add(new Medicine
+                {
+                    Name = m.Name,
+                    Price = m.Price,
+                    BasePrice = m.BasePrice,
+                    CostPrice = m.CostPrice,
+                    StockQuantity = m.StockQuantity,
+                    ExpiryDate = DateTime.Now.AddYears(m.ExpiryYears),
+                    Category = m.Category,
+                    Barcode = m.Barcode,
+                    IsActive = true,
+                    IngredientId = ingredientByName[m.Ingredient]
+                });
+            }
+
+            context.SaveChanges();
+
+            var medicineByName = context.Medicines.ToDictionary(m => m.Name, m => m.Id);
+
+            var interactionSeed = new[]
+            {
+                new { A = "Aspirin",     B = "Warfarin",     Severity = "High",   Warning = "Aspirin and Warfarin together may increase bleeding risk." },
+                new { A = "Ibuprofen",   B = "Warfarin",     Severity = "High",   Warning = "Ibuprofen and Warfarin together may increase bleeding risk." },
+                new { A = "Ibuprofen",   B = "Aspirin",      Severity = "Medium", Warning = "Ibuprofen and Aspirin together may increase stomach bleeding or irritation." },
+                new { A = "Azithromycin",B = "Atorvastatin", Severity = "Medium", Warning = "Azithromycin with Atorvastatin may increase muscle pain or weakness risk." },
+                new { A = "Amoxicillin", B = "Warfarin",     Severity = "Low",    Warning = "Amoxicillin with Warfarin may require monitoring for bleeding risk." },
+                new { A = "Diclofenac",  B = "Warfarin",     Severity = "High",   Warning = "Diclofenac and Warfarin together significantly increase bleeding risk." },
+                new { A = "Naproxen",    B = "Warfarin",     Severity = "High",   Warning = "Naproxen and Warfarin together significantly increase bleeding risk." },
+            };
+
+            var existingPairs = context.DrugInteractions
+                .Select(di => new { di.Ingredient1Id, di.Ingredient2Id })
+                .ToHashSet();
+
+            foreach (var i in interactionSeed)
+            {
+                var id1 = ingredientByName[i.A];
+                var id2 = ingredientByName[i.B];
+
+                bool alreadyExists = existingPairs.Any(p =>
+                    (p.Ingredient1Id == id1 && p.Ingredient2Id == id2) ||
+                    (p.Ingredient1Id == id2 && p.Ingredient2Id == id1));
+
+                if (alreadyExists)
+                    continue;
+
+                context.DrugInteractions.Add(new DrugInteraction
+                {
+                    Ingredient1Id = id1,
+                    Ingredient2Id = id2,
+                    Severity = i.Severity,
+                    WarningMessage = i.Warning
+                });
+            }
+
+            context.SaveChanges();
+
+            if (!context.Patients.Any())
+            {
+                context.Patients.AddRange(
+                    new Patient { FullName = "Ahmed Mohamed", PhoneNumber = "01012345678", Email = "ahmed@gmail.com", TotalSpent = 250, IsActive = true, CreatedAt = DateTime.Now },
+                    new Patient { FullName = "Sara Ali", PhoneNumber = "01098765432", Email = "sara@gmail.com", TotalSpent = 430, IsActive = true, CreatedAt = DateTime.Now },
+                    new Patient { FullName = "Omar Hassan", PhoneNumber = "01155554444", Email = "omar@gmail.com", TotalSpent = 125, IsActive = true, CreatedAt = DateTime.Now },
+                    new Patient { FullName = "Nour Tarek", PhoneNumber = "01222223333", Email = "nour@gmail.com", TotalSpent = 610, IsActive = true, CreatedAt = DateTime.Now }
+                );
+            }
+
+            if (!context.Users.Any())
+            {
+                context.Users.AddRange(
+                    new User { Username = "admin", PasswordHash = "admin123", Role = "Admin", FullName = "System Admin", PhoneNumber = "01000000001" },
+                    new User { Username = "pharmacist", PasswordHash = "pharmacist123", Role = "Pharmacist", FullName = "System Pharmacist", PhoneNumber = "01000000002" },
+                    new User { Username = "staff", PasswordHash = "staff123", Role = "Staff", FullName = "System Staff", PhoneNumber = "01000000003" },
+                    new User { Username = "client", PasswordHash = "client123", Role = "Client", FullName = "System Client", PhoneNumber = "01000000004" }
+                );
+            }
+
+            if (!context.Suppliers.Any())
+            {
+                context.Suppliers.AddRange(
+                    new Supplier { Name = "El Ezaby Pharma", ContactPerson = "Ahmed Samir", Phone = "01010101010", Email = "ezaby@gmail.com", Address = "Cairo", IsActive = true },
+                    new Supplier { Name = "Seif Medical", ContactPerson = "Mona Adel", Phone = "01020202020", Email = "seif@gmail.com", Address = "Alexandria", IsActive = true },
+                    new Supplier { Name = "Nile Pharma", ContactPerson = "Karim Hassan", Phone = "01030303030", Email = "nile@gmail.com", Address = "Giza", IsActive = true }
+                );
+            }
+
+            context.SaveChanges();
+
+            if (!context.PurchaseOrders.Any())
+            {
+                context.PurchaseOrders.AddRange(
+                    new PurchaseOrder { MedicineId = medicineByName["Panadol Extra"], SupplierId = 1, QuantityReceived = 50, CostPrice = 30, OrderDate = DateTime.Now },
+                    new PurchaseOrder { MedicineId = medicineByName["Brufen 400mg"], SupplierId = 1, QuantityReceived = 40, CostPrice = 40, OrderDate = DateTime.Now },
+                    new PurchaseOrder { MedicineId = medicineByName["Amoxil 500mg"], SupplierId = 2, QuantityReceived = 30, CostPrice = 70, OrderDate = DateTime.Now }
+                );
+            }
+
+            if (!context.PurchaseHistories.Any())
+            {
+                context.PurchaseHistories.AddRange(
+                    new PurchaseHistories { MedicineId = medicineByName["Panadol Extra"], PatientId = 1, MedicineName = "Panadol Extra", Quantity = 2, TotalPrice = 90, PurchaseDate = DateTime.Now },
+                    new PurchaseHistories { MedicineId = medicineByName["Brufen 400mg"], PatientId = 2, MedicineName = "Brufen 400mg", Quantity = 1, TotalPrice = 60, PurchaseDate = DateTime.Now },
+                    new PurchaseHistories { MedicineId = medicineByName["Amoxil 500mg"], PatientId = 3, MedicineName = "Amoxil 500mg", Quantity = 1, TotalPrice = 95, PurchaseDate = DateTime.Now }
+                );
+            }
+
+            if (!context.OnlineOrders.Any())
+            {
+                context.OnlineOrders.AddRange(
+                    new OnlineOrder { UserId = 4, MedicineId = medicineByName["Panadol Extra"], MedicineName = "Panadol Extra", Quantity = 2, TotalPrice = 90, OrderDate = DateTime.Now, ShippingAddress = "Nasr City, Cairo", PaymentMethod = "Cash", Status = "Pending" },
+                    new OnlineOrder { UserId = 4, MedicineId = medicineByName["Amoxil 500mg"], MedicineName = "Amoxil 500mg", Quantity = 1, TotalPrice = 95, OrderDate = DateTime.Now, ShippingAddress = "Dokki, Giza", PaymentMethod = "Visa", Status = "Delivered" }
+                );
+            }
 
             context.SaveChanges();
         }
