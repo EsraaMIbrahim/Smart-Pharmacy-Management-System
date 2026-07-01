@@ -1,31 +1,34 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'https://localhost:7168/api';
+const BASE_URL = "http://localhost:5192/api";
+// const BASE_URL = "https://localhost:7168/api";
 
 const apiClient = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export const pharmacyApi = {
-    // --- Auth Operations ---
-    register: (data) => apiClient.post('/Auth/register', data),
-    login: (credentials) => apiClient.post('/Auth/login', credentials),
+  // --- Auth Operations ---
+  register: (data) => apiClient.post("/Auth/register", data),
+  login: (credentials) => apiClient.post("/Auth/login", credentials),
 
-    // --- Medicine/Inventory Operations ---
-    getMedicines: () => apiClient.get('/Medicines'),
-    addMedicine: (data) => apiClient.post('/Medicines', data),
-    updateMedicine: (id, data) => apiClient.put(`/Medicines/${id}`, data),
+  // --- Medicine/Inventory Operations ---
+  getMedicines: () => apiClient.get("/Medicines"),
+  addMedicine: (data) => apiClient.post("/Medicines", data),
+  updateMedicine: (id, data) => apiClient.put(`/Medicines/${id}`, data),
 
-    // --- Clinical & Safety Operations ---
+  // --- Clinical & Safety Operations ---
 
-   
-    checkInteraction: (cartIngredientId, newIngredientId) =>
-        apiClient.get(`/DrugInteractions/check-safety?cartIngredientIds=${cartIngredientId}&newIngredientId=${newIngredientId}`),
+  checkInteraction: (cartIngredientId, newIngredientId) =>
+    apiClient.get(
+      `/DrugInteractions/check-safety?cartIngredientIds=${cartIngredientId}&newIngredientId=${newIngredientId}`,
+    ),
 
-    findAlternatives: (name) => apiClient.get(`/Medicines/FindAlternatives/${name}`),
+  findAlternatives: (name) =>
+    apiClient.get(`/Medicines/FindAlternatives/${name}`),
 
     scanCart: (medicineIds) =>
         apiClient.post('/DrugInteractions/scan-cart', { medicineIds }),
@@ -52,18 +55,48 @@ export const pharmacyApi = {
     getPurchaseHistory: () => apiClient.get('/Suppliers/PurchaseHistory'),
     getSalesHistory: () => apiClient.get('/Patients/AllSales'),
 
-    // --- Order & Purchase Operations ---
-    createOnlineOrder: (orderData) => apiClient.post('/OnlineOrders', orderData),
-    recordPatientPurchase: (purchaseData) => apiClient.post('/Patients/RecordPurchase', purchaseData),
-    getMyHistory: (userId) => apiClient.get(`/OnlineOrders/MyHistory/${userId}`),
+  // --- Order & Purchase Operations ---
+  createOnlineOrder: (orderData) => apiClient.post("/OnlineOrders", orderData),
+  recordPatientPurchase: (purchaseData) =>
+    apiClient.post("/Patients/RecordPurchase", purchaseData),
+  getMyHistory: (userId) => apiClient.get(`/OnlineOrders/MyHistory/${userId}`),
+  createAppointment: (data) =>
+    apiClient.post("/ConsultationAppointments", data),
+  getMyAppointments: (userId) =>
+    apiClient.get(`/ConsultationAppointments/my/${userId}`),
+  cancelAppointment: (id, clientUserId) =>
+    apiClient.patch(`/ConsultationAppointments/${id}/cancel`, { clientUserId }),
+  getAppointmentsForManagement: (actorUserId) =>
+    apiClient.get(
+      `/ConsultationAppointments/management?actorUserId=${actorUserId}`,
+    ),
+  getPharmacists: (actorUserId) =>
+    apiClient.get(
+      `/ConsultationAppointments/pharmacists?actorUserId=${actorUserId}`,
+    ),
+  updateAppointment: (id, data) =>
+    apiClient.patch(`/ConsultationAppointments/${id}`, data),
 
-    // --- Analytics Endpoints ---
-    getDashboardMetrics: () => apiClient.get('/Analytics/DashboardMetrics'),
-    getSalesTrend: () => apiClient.get('/Analytics/SalesTrend'),
-    getTopProducts: () => apiClient.get('/Analytics/TopProducts'),
-    getAnalyticsShipments: () => apiClient.get('/Analytics/Shipments'),
-    getClientOrders: () => apiClient.get('/Analytics/ClientOrders'),
-    getExpiryEngine: () => apiClient.get('/Analytics/ExpiryEngine'),
+  // --- Analytics Endpoints ---
+  getDashboardMetrics: () => apiClient.get("/Analytics/DashboardMetrics"),
+  getSalesTrend: () => apiClient.get("/Analytics/SalesTrend"),
+  getTopProducts: () => apiClient.get("/Analytics/TopProducts"),
+  getAnalyticsShipments: () => apiClient.get("/Analytics/Shipments"),
+  getClientOrders: () => apiClient.get("/Analytics/ClientOrders"),
+  getExpiryEngine: () => apiClient.get("/Analytics/ExpiryEngine"),
+  
+  // Get all orders for admin dashboard
+    getAllOrders: () => apiClient.get('/OnlineOrders/AllOrders'),
+    // Update order status (used by admin to mark orders as completed or canceled after review)
+    confirmOrderUpdate: (payload) => apiClient.post('/Payment/confirm', payload),
+
+  // --- AI Features ---
+  explainMedicine: (medicineName) => apiClient.post('/Ai/explain-medicine', { medicineName }),
+  getMostSearched: () => apiClient.get('/Ai/most-searched'),
+  saveExplanation: (userId, medicineName, explanation) =>
+    apiClient.post('/Ai/save-explanation', { userId, medicineName, explanation }),
+  getSavedExplanations: (userId) => apiClient.get(`/Ai/saved/${userId}`),
+  deleteSavedExplanation: (id) => apiClient.delete(`/Ai/saved/${id}`),
 };
 
 export default pharmacyApi;

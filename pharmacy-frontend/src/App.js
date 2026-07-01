@@ -10,6 +10,10 @@ import Suppliers from './pages/Suppliers';
 import InvoiceModal from './pages/InvoiceModal';
 import OrderHistory from './pages/OrderHistory';
 import Analytics from './pages/Analytics';
+import OnlineOrders from './pages/OnlineOrders';
+import ClientAppointments from './pages/ClientAppointments';
+import AppointmentManagement from './pages/AppointmentManagement';
+import MedicineExplainer from './pages/MedicineExplainer';
 
 /**
  * Smart Pharmacy Management System - Core Logic
@@ -167,12 +171,22 @@ function App() {
             };
 
             console.log("🚀 Sending to SQL:", JSON.stringify(orderPayload));
-            await pharmacyApi.createOnlineOrder(orderPayload);
-            alert("✅ Order Placed Successfully!");
+            const response = await pharmacyApi.createOnlineOrder(orderPayload);
+
+            console.log(response);
+
+            alert("✅ Order Placed Successfully! you will be redirected to payment page soon");
 
             setCart([]);
             fetchSalesHistory();
             setView('my_orders');
+
+            // Return created order id (attempt common id property names)
+            const createdId = response?.data?.id ?? null;
+            console.log(createdId);
+
+            localStorage.setItem("lastOnlineOrderItem", createdId);
+            return createdId;
         } catch (error) {
             console.error("❌ SQL Handshake Failed:", error.response?.data);
             const serverError = error.response?.data?.errors
@@ -180,6 +194,7 @@ function App() {
                 : error.response?.data || "Check Server Connection";
             alert("❌ Checkout failed: " + serverError);
         }
+        return null;
     };
 
     useEffect(() => {
@@ -300,12 +315,22 @@ function App() {
                     <Analytics setView={setView} medicines={medicines} />
                 )}
 
+                {/* 📋 All orders (not for clients) */}
+                {view === 'online_orders' && (
+                    <OnlineOrders 
+                        setView={setView} 
+                    />
+                )}
+
                 {view === 'my_orders' && (
                     <OrderHistory
                         userId={user.id}
                         setView={setView}
                     />
                 )}
+                {view === 'consultations' && user.role === 'Client' && <ClientAppointments userId={user.id} />}
+                {view === 'consultation_management' && (user.role === 'Admin' || user.role === 'Pharmacist') && <AppointmentManagement userId={user.id} userRole={user.role} />}
+                {view === 'ai_explainer' && <MedicineExplainer userId={user.id} />}
             </main>
 
             {currentInvoice && (

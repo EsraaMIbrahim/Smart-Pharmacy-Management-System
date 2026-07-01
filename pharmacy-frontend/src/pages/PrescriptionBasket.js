@@ -3,6 +3,7 @@ import React from 'react';
 function PrescriptionBasket({ cart, removeFromCart, onCheckout }) {
     if (!cart || cart.length === 0) return null;
 
+    
     const grandTotal = cart.reduce((sum, item) => {
         const itemTotal = item.totalPrice ?? ((item.price ?? 0) * (item.quantity ?? 1));
         return sum + itemTotal;

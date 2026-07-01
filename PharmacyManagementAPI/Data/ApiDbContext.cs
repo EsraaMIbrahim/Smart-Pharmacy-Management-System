@@ -16,6 +16,9 @@ namespace PharmacyManagementAPI.Data
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<OnlineOrder> OnlineOrders { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<ConsultationAppointment> ConsultationAppointments { get; set; }
+        public DbSet<AiMedicineSearch> AiMedicineSearches { get; set; }
+        public DbSet<AiSavedExplanation> AiSavedExplanations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -101,6 +104,14 @@ namespace PharmacyManagementAPI.Data
                 // Index on IngredientId already exists as PK.
                 // Add index on TherapeuticClass for Level 3 class-match queries.
                 entity.HasIndex(e => e.TherapeuticClass);
+            });
+
+            modelBuilder.Entity<ConsultationAppointment>(entity =>
+            {
+                entity.HasOne(e => e.ClientUser).WithMany().HasForeignKey(e => e.ClientUserId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(e => e.PharmacistUser).WithMany().HasForeignKey(e => e.PharmacistUserId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasIndex(e => e.ScheduledAt);
+                entity.HasIndex(e => new { e.PharmacistUserId, e.ScheduledAt });
             });
         }
     }

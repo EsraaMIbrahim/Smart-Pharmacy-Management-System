@@ -35,6 +35,8 @@ namespace PharmacyManagementAPI.Controllers
             {
                 id = user.Id,
                 username = user.Username,
+                fullname = user.FullName,
+                phone = user.PhoneNumber,
                 role = user.Role,
                 token = "success-token-" + Guid.NewGuid().ToString() //  for demo
             });

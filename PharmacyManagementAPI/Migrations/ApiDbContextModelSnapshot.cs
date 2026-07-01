@@ -69,6 +69,112 @@ namespace PharmacyManagementAPI.Migrations
                     b.ToTable("OnlineOrders");
                 });
 
+            modelBuilder.Entity("PharmacyManagementAPI.Models.AiMedicineSearch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LastSearchedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MedicineName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SearchCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AiMedicineSearches");
+                });
+
+            modelBuilder.Entity("PharmacyManagementAPI.Models.AiSavedExplanation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Explanation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MedicineName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SavedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AiSavedExplanations");
+                });
+
+            modelBuilder.Entity("PharmacyManagementAPI.Models.ConsultationAppointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConsultationType")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PharmacistUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("ScheduledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StaffNotes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientUserId");
+
+                    b.HasIndex("ScheduledAt");
+
+                    b.HasIndex("PharmacistUserId", "ScheduledAt");
+
+                    b.ToTable("ConsultationAppointments");
+                });
+
             modelBuilder.Entity("PharmacyManagementAPI.Models.DrugInteraction", b =>
                 {
                     b.Property<int>("Id")
@@ -344,6 +450,24 @@ namespace PharmacyManagementAPI.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Medicine");
+                });
+
+            modelBuilder.Entity("PharmacyManagementAPI.Models.ConsultationAppointment", b =>
+                {
+                    b.HasOne("PharmacyManagementAPI.Models.User", "ClientUser")
+                        .WithMany()
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyManagementAPI.Models.User", "PharmacistUser")
+                        .WithMany()
+                        .HasForeignKey("PharmacistUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ClientUser");
+
+                    b.Navigation("PharmacistUser");
                 });
 
             modelBuilder.Entity("PharmacyManagementAPI.Models.DrugInteraction", b =>
