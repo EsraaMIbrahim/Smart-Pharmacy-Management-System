@@ -8,6 +8,7 @@ function ClientStore({ medicines = [], cart = [], addToCart, removeFromCart, han
     const [checkoutStep, setCheckoutStep] = useState('shop');
     const [deliveryInfo, setDeliveryInfo] = useState({ address: '', city: 'Cairo', method: 'Cash' });
     const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+    const [activeSection, setActiveSection] = useState('shop');
 
     // --- 1. SIMILARITY HELPER (The Typo Protection Engine) ---
     const getSimilarity = (str1, str2) => {
@@ -143,28 +144,60 @@ function ClientStore({ medicines = [], cart = [], addToCart, removeFromCart, han
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '1050px', margin: '40px auto' }}>
-                        <AlternativeMatcher medicines={medicines} />
-                        <InteractionGuard patients={patients} userRole={userRole} />
+                            {/* Section switcher */}
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', margin: '30px auto 0' }}>
+                        <button
+                            onClick={() => setActiveSection('shop')}
+                            style={{
+                                padding: '12px 30px', borderRadius: '50px', border: '2px solid #28a745',
+                                background: activeSection === 'shop' ? '#28a745' : 'white',
+                                color: activeSection === 'shop' ? 'white' : '#28a745',
+                                fontWeight: '900', fontSize: '14px', cursor: 'pointer'
+                            }}
+                        >
+                            🛍️ Shop
+                        </button>
+                        <button
+                            onClick={() => setActiveSection('tools')}
+                            style={{
+                                padding: '12px 30px', borderRadius: '50px', border: '2px solid #7c3aed',
+                                background: activeSection === 'tools' ? '#7c3aed' : 'white',
+                                color: activeSection === 'tools' ? 'white' : '#7c3aed',
+                                fontWeight: '900', fontSize: '14px', cursor: 'pointer'
+                            }}
+                        >
+                            🧬 AI Clinical Tools
+                        </button>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '40px' }}>
-                        <div style={badgeStyle('#6610f2')}>🔥 Trending Now</div>
-                        <div style={badgeStyle('#dc3545')}>📉 Smart Savings Applied</div>
-                    </div>
+                    {activeSection === 'tools' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '1050px', margin: '30px auto' }}>
+                            <AlternativeMatcher medicines={medicines} />
+                            <InteractionGuard patients={patients} userRole={userRole} />
+                        </div>
+                    )}
 
-                    <div style={gridStyle}>
-                        {displayMedicines.map(med => (
-                            <ProductCard
-                                key={med.id ?? med.Id}
-                                med={med}
-                                addToCart={addToCart}
-                                setCheckoutStep={setCheckoutStep}
-                                salesCountMap={salesCountMap}
-                                TRENDING_THRESHOLD={TRENDING_THRESHOLD}
-                            />
-                        ))}
-                    </div>
+                  {activeSection === 'shop' && (
+                    <>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '40px', marginTop: '30px' }}>
+                            <div style={badgeStyle('#6610f2')}>🔥 Trending Now</div>
+                            <div style={badgeStyle('#dc3545')}>📉 Smart Savings Applied</div>
+                        </div>
+
+                        <div style={gridStyle}>
+                            {displayMedicines.map(med => (
+                                <ProductCard
+                                    key={med.id ?? med.Id}
+                                    med={med}
+                                    addToCart={addToCart}
+                                    setCheckoutStep={setCheckoutStep}
+                                    salesCountMap={salesCountMap}
+                                    TRENDING_THRESHOLD={TRENDING_THRESHOLD}
+                                />
+                            ))}
+                        </div>
+                    </>
+                    )}
                 </>
             )}
 

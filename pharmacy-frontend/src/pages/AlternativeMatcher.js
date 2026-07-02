@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { pharmacyApi } from '../services/apiService';
 
 /**
@@ -11,17 +11,56 @@ import { pharmacyApi } from '../services/apiService';
  *   Level 3 — Class Match      : different ingredient, same TherapeuticClass
  *                                e.g. Ibuprofen → Diclofenac → Naproxen (all "NSAID")
  */
-function AlternativeMatcher({ medicines }) {
+function AlternativeMatcher({ medicines = [] }) {
     const [search, setSearch] = useState('');
     const [result, setResult] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [suggestions, setSuggestions] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const wrapperRef = useRef(null);
 
-    const runSearch = async () => {
-        if (!search.trim()) return;
+    useEffect(() => {
+    const handleClickOutside = (e) => {
+        if (wrapperRef.current && !wrapperRef.current.contains(e.target))
+            setShowDropdown(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+    const handleInput = (value) => {
+        setSearch(value);
+        setResult(null);
+
+        if (!value.trim()) {
+            setSuggestions([]);
+            setShowDropdown(false);
+            return;
+        }
+
+        const query = value.toLowerCase();
+        const filtered = medicines
+            .filter(m => (m.isActive ?? m.IsActive) !== false)
+            .filter(m => (m.name ?? m.Name ?? '').toLowerCase().includes(query))
+            .slice(0, 8);
+
+        setSuggestions(filtered);
+        setShowDropdown(filtered.length > 0);
+    };
+
+    const handleSelect = (med) => {
+        const name = med.name ?? med.Name ?? '';
+        setSearch(name);
+        setSuggestions([]);
+        setShowDropdown(false);
+        runSearch(name);
+    };
+    const runSearch = async (nameOverride) => {
+        const query = (nameOverride ?? search).trim();
+        if (!query) return;
         setIsLoading(true);
         setResult(null);
         try {
-            const response = await pharmacyApi.getSmartAlternatives(search.trim());
+            const response = await pharmacyApi.getSmartAlternatives(query);
             setResult(response.data);
         } catch (err) {
             if (err?.response?.status === 404) setResult({ notFound: true });
@@ -49,21 +88,76 @@ function AlternativeMatcher({ medicines }) {
             </div>
 
             {/* Search */}
-            <div style={capsule}>
-                <input
-                    placeholder="Enter out-of-stock medicine name..."
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && runSearch()}
-                    style={inputStyle}
-                />
-                <button
-                    onClick={runSearch}
-                    disabled={isLoading || !search.trim()}
-                    style={{ ...actionBtn, opacity: (isLoading || !search.trim()) ? 0.6 : 1 }}
-                >
-                    {isLoading ? 'Scanning...' : 'Execute Scan'}
-                </button>
+            <div ref={wrapperRef} style={{ position: 'relative' }}>
+                <div style={capsule}>
+                    <input
+                        placeholder="Type medicine name... (e.g. 'pana' → Panadol Extra)"
+                        value={search}
+                        onChange={e => handleInput(e.target.value)}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') { setShowDropdown(false); runSearch(); }
+                            if (e.key === 'Escape') setShowDropdown(false);
+                        }}
+                        onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
+                        style={inputStyle}
+                        autoComplete="off"
+                    />
+                    {search && (
+                        <button
+                            onClick={() => { setSearch(''); setSuggestions([]); setResult(null); setShowDropdown(false); }}
+                            style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '16px', fontWeight: '700', padding: '4px 8px' }}
+                        >
+                            ✕
+                        </button>
+                    )}
+                    <button
+                        onClick={() => runSearch()}
+                        disabled={isLoading || !search.trim()}
+                        style={{ ...actionBtn, opacity: (isLoading || !search.trim()) ? 0.6 : 1 }}
+                    >
+                        {isLoading ? 'Scanning...' : 'Execute Scan'}
+                    </button>
+                </div>
+
+                {/* Suggestions dropdown */}
+                {showDropdown && suggestions.length > 0 && (
+                    <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.12)', zIndex: 1000, overflow: 'hidden' }}>
+                        {suggestions.map(med => {
+                            const id       = med.id ?? med.Id;
+                            const name     = med.name ?? med.Name ?? '';
+                            const ingName  = med.ingredient?.name ?? med.Ingredient?.Name ?? '';
+                            const stock    = med.stockQuantity ?? med.StockQuantity ?? 0;
+                            const query    = search.toLowerCase();
+                            const idx      = name.toLowerCase().indexOf(query);
+                            const highlighted = idx === -1 ? name : (
+                                <>{name.slice(0, idx)}<span style={{ background: '#fef9c3', color: '#92400e', fontWeight: '900' }}>{name.slice(idx, idx + query.length)}</span>{name.slice(idx + query.length)}</>
+                            );
+                            return (
+                                <div
+                                    key={id}
+                                    onClick={() => handleSelect(med)}
+                                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid #f1f5f9', gap: '12px' }}
+                                    onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
+                                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <span style={{ fontSize: '18px', background: '#f8fafc', padding: '6px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>💊</span>
+                                        <div>
+                                            <div style={{ fontWeight: '800', fontSize: '14px', color: '#1e293b' }}>{highlighted}</div>
+                                            <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{ingName && `🧬 ${ingName}`}</div>
+                                        </div>
+                                    </div>
+                                    <span style={{ fontSize: '11px', fontWeight: '700', padding: '2px 8px', borderRadius: '8px', background: stock > 0 ? '#f0fdf4' : '#fef2f2', color: stock > 0 ? '#15803d' : '#dc2626', border: `1px solid ${stock > 0 ? '#bbf7d0' : '#fecaca'}` }}>
+                                        {stock > 0 ? `${stock} in stock` : 'Out of stock'}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                        <div style={{ padding: '8px 16px', fontSize: '11px', color: '#94a3b8', fontWeight: '600', background: '#f8fafc', textAlign: 'center' }}>
+                            {suggestions.length} result{suggestions.length > 1 ? 's' : ''} — press Enter to search
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Tier legend */}
