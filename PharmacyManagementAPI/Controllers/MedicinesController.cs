@@ -94,38 +94,63 @@ namespace PharmacyManagementAPI.Controllers
                 return NotFound(new { message = $"'{name}' not found in the active catalog." });
 
             var therapeuticClass = target.Ingredient?.TherapeuticClass;
+            var targetConcentration = target.Concentration;
 
-            // All other medicines that are in stock and active
             var candidates = await _context.Medicines
                 .Include(m => m.Ingredient)
                 .Where(m => m.Id != target.Id && m.StockQuantity > 0 && m.IsActive)
                 .ToListAsync();
 
-            // ── Level 1: Bio-Equivalent ──
-            // Exactly the same active ingredient (same IngredientId)
+            // ── Level 1: Bio-Equivalent ───────────────────────────────────────
+            // Same IngredientId AND same Concentration.
+            // Identical molecule, identical dose — only the brand differs.
+            // Example: Panadol Extra 500mg → Adol 500mg
             var level1 = candidates
-                .Where(m => m.IngredientId == target.IngredientId)
+                .Where(m => m.IngredientId == target.IngredientId
+                    && m.Concentration == targetConcentration)
                 .Select(m => ToAlternativeDto(m, 1, "Bio-Equivalent"))
                 .ToList();
 
             var level1Ids = level1.Select(a => a.Id).ToHashSet();
 
-            // ── Level 2: Therapeutic Match ──
-            // Same primary ingredient, meaningfully different in category or cost tier
-            // (Priced >20% differently — different brand/formulation segment)
-            var level2 = candidates
-                .Where(m => m.IngredientId == target.IngredientId
-                    && !level1Ids.Contains(m.Id)
-                    && Math.Abs((double)(m.Price - target.Price) / (double)target.Price) > 0.20)
+            // ── Level 2: Therapeutic Match ────────────────────────────────────
+            // Two sub-cases combined:
+            //   2a) Same IngredientId + different Concentration
+            //       Same drug, different dose — pharmacist adjusts accordingly.
+            //       Example: Brufen 400mg → Ibufen 200mg
+            //   2b) Same Category + different IngredientId (not already in L1)
+            //       Same clinical use case, different molecule.
+            //       Example: Brufen 400mg → Voltaren 50mg (both "Painkiller")
+            var level2a = candidates
+                .Where(m => !level1Ids.Contains(m.Id)
+                    && m.IngredientId == target.IngredientId
+                    && m.Concentration != targetConcentration)
+                .ToList();
+
+            var level2aIds = level2a.Select(m => m.Id).ToHashSet();
+
+            var level2b = candidates
+                .Where(m => !level1Ids.Contains(m.Id)
+                    && !level2aIds.Contains(m.Id)
+                    && m.IngredientId != target.IngredientId
+                    && m.Category == target.Category)
+                .ToList();
+
+            var level2 = level2a.Concat(level2b)
                 .Select(m => ToAlternativeDto(m, 2, "Therapeutic Match"))
                 .ToList();
 
-            // ── Level 3: Class Match ──
-            // Different active ingredient but same TherapeuticClass
+            // ── Level 3: Class Match ──────────────────────────────────────────
+            // Same TherapeuticClass, not already surfaced in L1 or L2.
+            // Crosses category boundaries — clinically equivalent family.
+            // Example: Aspirin "Blood Thinner" → Brufen "Painkiller" (both NSAID)
             var level3 = new List<AlternativeDto>();
             if (!string.IsNullOrEmpty(therapeuticClass))
             {
-                var usedIds = level1Ids.Union(level2.Select(a => a.Id)).ToHashSet();
+                var usedIds = level1Ids
+                    .Union(level2.Select(a => a.Id))
+                    .ToHashSet();
+
                 level3 = candidates
                     .Where(m => !usedIds.Contains(m.Id)
                         && m.IngredientId != target.IngredientId
@@ -138,6 +163,8 @@ namespace PharmacyManagementAPI.Controllers
             {
                 targetMedicine = target.Name,
                 activeIngredient = target.Ingredient?.Name,
+                concentration = target.Concentration,
+                category = target.Category,
                 therapeuticClass,
                 level1BioEquivalent = level1,
                 level2TherapeuticMatch = level2,
@@ -145,6 +172,22 @@ namespace PharmacyManagementAPI.Controllers
                 totalAlternativesFound = level1.Count + level2.Count + level3.Count
             });
         }
+
+        // ── Helper ─────────────────────────────────────────────────────────
+        private static AlternativeDto ToAlternativeDto(Medicine m, int level, string label) => new()
+        {
+            Id = m.Id,
+            Name = m.Name,
+            Price = m.Price,
+            StockQuantity = m.StockQuantity,
+            Category = m.Category,
+            ActiveIngredient = m.Ingredient?.Name,
+            Concentration = m.Concentration,
+            TherapeuticClass = m.Ingredient?.TherapeuticClass,
+            MatchLevel = level,
+            MatchLabel = label
+        };
+    
 
         // 4. PUT: api/Medicines/{id} — 
         [HttpPut("{id}")]
@@ -193,21 +236,8 @@ namespace PharmacyManagementAPI.Controllers
             return NoContent();
         }
 
-        // ── Helper ──
-        private static AlternativeDto ToAlternativeDto(Medicine m, int level, string label) => new()
-        {
-            Id = m.Id,
-            Name = m.Name,
-            Price = m.Price,
-            StockQuantity = m.StockQuantity,
-            Category = m.Category,
-            ActiveIngredient = m.Ingredient?.Name,
-            TherapeuticClass = m.Ingredient?.TherapeuticClass,
-            MatchLevel = level,
-            MatchLabel = label
-        };
-    }
 
+    }
     // ── DTO ──
     public class AlternativeDto
     {
@@ -217,8 +247,10 @@ namespace PharmacyManagementAPI.Controllers
         public int StockQuantity { get; set; }
         public string? Category { get; set; }
         public string? ActiveIngredient { get; set; }
+        public string? Concentration { get; set; }
         public string? TherapeuticClass { get; set; }
         public int MatchLevel { get; set; }
         public string MatchLabel { get; set; } = "";
     }
 }
+

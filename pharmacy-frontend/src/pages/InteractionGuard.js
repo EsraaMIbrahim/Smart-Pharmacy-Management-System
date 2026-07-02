@@ -13,8 +13,8 @@ import { pharmacyApi } from '../services/apiService';
  *    Select a patient → select medicines to dispense → checks new medicines
  *    against everything the patient has bought before.
  */
-function InteractionGuard({ patients = [] }) {
-
+function InteractionGuard({ patients = [], userRole = "" }) {
+    const isClient = userRole?.toLowerCase() === 'client';
     const [activeTab, setActiveTab] = useState('cart'); // 'cart' | 'profile'
 
     // ── Shared data ──
@@ -133,13 +133,15 @@ function InteractionGuard({ patients = [] }) {
                     🔬 Cart Scan
                     <span style={tabBadge(activeTab === 'cart')}>N-Tier Matrix</span>
                 </button>
-                <button
-                    onClick={() => setActiveTab('profile')}
-                    style={tabBtn(activeTab === 'profile')}
-                >
-                    👤 Patient Profile Check
-                    <span style={tabBadge(activeTab === 'profile')}>Medication History</span>
-                </button>
+                {!isClient && (
+                    <button
+                        onClick={() => setActiveTab('profile')}
+                        style={tabBtn(activeTab === 'profile')}
+                    >
+                        👤 Patient Profile Check
+                        <span style={tabBadge(activeTab === 'profile')}>Medication History</span>
+                    </button>
+                )}
             </div>
 
             {/* ── TAB 1: CART SCAN ── */}

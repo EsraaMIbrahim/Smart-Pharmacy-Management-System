@@ -31,7 +31,10 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(
                 "http://localhost:3000",   // React dev server (http)
-                "https://localhost:3000"   // React dev server (https)
+                "https://localhost:3000",
+                "https://localhost:3001",
+                "http://localhost:3001"
+                // React dev server (https)
             )
             .AllowAnyHeader()
             .AllowAnyMethod();

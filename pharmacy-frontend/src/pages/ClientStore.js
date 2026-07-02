@@ -3,7 +3,7 @@ import AlternativeMatcher from '../pages/AlternativeMatcher';
 import InteractionGuard from '../pages/InteractionGuard';
 import PaymentMethod from '../pages/PaymentMethod';
 
-function ClientStore({ medicines = [], cart = [], addToCart, removeFromCart, handleCheckout, salesCountMap = {}, TRENDING_THRESHOLD = 5, patients = [] }) {
+function ClientStore({ medicines = [], cart = [], addToCart, removeFromCart, handleCheckout, salesCountMap = {}, TRENDING_THRESHOLD = 5, patients = [], userRole = "" }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [checkoutStep, setCheckoutStep] = useState('shop');
     const [deliveryInfo, setDeliveryInfo] = useState({ address: '', city: 'Cairo', method: 'Cash' });
@@ -145,7 +145,7 @@ function ClientStore({ medicines = [], cart = [], addToCart, removeFromCart, han
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '1050px', margin: '40px auto' }}>
                         <AlternativeMatcher medicines={medicines} />
-                        <InteractionGuard patients={patients} />
+                        <InteractionGuard patients={patients} userRole={userRole} />
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '40px' }}>

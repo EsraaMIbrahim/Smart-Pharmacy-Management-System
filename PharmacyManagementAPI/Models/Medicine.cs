@@ -29,6 +29,8 @@ namespace PharmacyManagementAPI.Models
         public string? Category { get; set; }
         public string? Barcode { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
+        public string? Concentration { get; set; }
+
 
         public virtual ICollection<OnlineOrder> OnlineOrders { get; set; } = new List<OnlineOrder>();
         public virtual ICollection<PurchaseHistories> PurchaseHistories { get; set; } = new List<PurchaseHistories>();

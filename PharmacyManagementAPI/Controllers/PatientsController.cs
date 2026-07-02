@@ -88,7 +88,26 @@ namespace PharmacyManagementAPI.Controllers
 
             if (patient == null)
             {
-                return BadRequest("Patient phone number was not found in the live registry.");
+                //return BadRequest("Patient phone number was not found in the live registry.");
+                // Phone not found or anonymous → fall back to Walk-in Customer
+                patient = await _context.Patients
+                    .FirstOrDefaultAsync(p => p.PhoneNumber == "0000000000");
+
+                // Create Walk-in patient once if it doesn't exist yet
+                if (patient == null)
+                {
+                    patient = new Patient
+                    {
+                        FullName = "Walk-in Customer",
+                        PhoneNumber = "0000000000",
+                        Email = null,
+                        TotalSpent = 0,
+                        IsActive = true,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.Patients.Add(patient);
+                    await _context.SaveChangesAsync();
+                }
             }
 
             if (!patient.IsActive)

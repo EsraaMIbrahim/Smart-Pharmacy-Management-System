@@ -617,7 +617,7 @@ function Inventory({
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '1050px', margin: '40px auto' }}>
                         <AlternativeMatcher medicines={medicines} />
-                        <InteractionGuard patients={patients} />
+                        <InteractionGuard patients={patients} userRole={userRole} />
                     </div>
 
                     <div className="no-print" style={navigationDockStyle}>

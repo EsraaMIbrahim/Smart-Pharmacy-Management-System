@@ -308,6 +308,8 @@ function App() {
                         TRENDING_THRESHOLD={5}
                         setView={setView}
                         patients={patients}
+                        userRole={user.role}
+
                     />
                 )}
 
